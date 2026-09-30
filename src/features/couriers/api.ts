@@ -49,8 +49,9 @@ export async function recordDelivery(
   if (data.notes) formData.append("notes", data.notes);
   if (data.proofImage) formData.append("proofImage", data.proofImage);
   
-  const { apiClient } = await import("@/lib/api/client");
-  await apiClient.post(COURIER_ENDPOINTS.recordDelivery(shipmentId), formData, {
+  const clientModule = await import("@/lib/api/client");
+  const client = clientModule.default;
+  await client.post(COURIER_ENDPOINTS.recordDelivery(shipmentId), formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 }
