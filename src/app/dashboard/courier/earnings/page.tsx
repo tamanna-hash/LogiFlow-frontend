@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { DollarSign, Package } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { MetricCard } from "@/components/shared/MetricCard";

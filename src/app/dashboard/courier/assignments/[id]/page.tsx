@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { ArrowLeft, CheckCircle, XCircle, Package, MapPin, Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
