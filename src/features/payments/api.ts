@@ -12,7 +12,15 @@ export async function initiateBkashPayment(
   return resp.data;
 }
 
-export async function getPaymentByShipment(shipmentId: string): Promise<Payment> {
+export async function initiateStripeCheckout(
+  shipmentId: string
+): Promise<{ checkoutUrl: string; paymentId: string; amount: string }> {
+  const resp = await apiPost<{ checkoutUrl: string; paymentId: string; amount: string }>(
+    PAYMENT_ENDPOINTS.stripeCheckout,
+    { shipmentId }
+  );
+  return resp.data;
+}
   const resp = await apiGet<Payment>(PAYMENT_ENDPOINTS.byShipment(shipmentId));
   return resp.data;
 }

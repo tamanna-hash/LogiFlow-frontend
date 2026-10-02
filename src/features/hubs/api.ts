@@ -66,3 +66,39 @@ export async function confirmArrival(
 ): Promise<void> {
   await apiPatch(HUB_ENDPOINTS.confirmArrival(hubId, transferId));
 }
+
+// ── Zone management ───────────────────────────────────────────────────────────
+import { ZONE_ENDPOINTS } from "@/lib/api/endpoints";
+import type { Zone } from "@/types";
+
+export interface ZoneListResponse {
+  zones: Zone[];
+  meta: PaginationMeta;
+}
+
+export async function listZones(params?: {
+  page?: number;
+  limit?: number;
+}): Promise<ZoneListResponse> {
+  const resp = await apiGet<Zone[]>(ZONE_ENDPOINTS.list, params as Record<string, unknown>);
+  return { zones: resp.data, meta: resp.meta! };
+}
+
+export async function createZone(data: {
+  name: string;
+  code: string;
+  hubId: string;
+  description?: string;
+}): Promise<Zone> {
+  const resp = await apiPost<Zone>(ZONE_ENDPOINTS.create, data);
+  return resp.data;
+}
+
+export async function updateZone(id: string, data: Partial<{ name: string; code: string; description: string }>): Promise<Zone> {
+  const resp = await apiPatch<Zone>(ZONE_ENDPOINTS.update(id), data);
+  return resp.data;
+}
+
+export async function deleteZone(id: string): Promise<void> {
+  await apiDelete(ZONE_ENDPOINTS.delete(id));
+}

@@ -128,3 +128,65 @@ export function useConfirmArrival() {
     },
   });
 }
+
+// ── Zone management hooks ──────────────────────────────────────────────────────
+import { listZones, createZone, updateZone, deleteZone } from "./api";
+import type { Zone } from "@/types";
+
+const zoneKeys = {
+  all: ["zones"] as const,
+  list: (p?: Record<string, unknown>) => p ? ["zones", p] as const : ["zones"] as const,
+};
+
+export function useZonesList(params?: { page?: number; limit?: number }) {
+  return useQuery({
+    queryKey: zoneKeys.list(params as Record<string, unknown>),
+    queryFn: () => listZones(params),
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useCreateZone() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createZone,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: zoneKeys.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.hubs() });
+      toast.success("Zone created.");
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to create zone");
+    },
+  });
+}
+
+export function useUpdateZone() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<Zone> }) => updateZone(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: zoneKeys.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.hubs() });
+      toast.success("Zone updated.");
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to update zone");
+    },
+  });
+}
+
+export function useDeleteZone() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteZone(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: zoneKeys.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.hubs() });
+      toast.success("Zone deleted.");
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to delete zone");
+    },
+  });
+}

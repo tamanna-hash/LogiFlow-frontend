@@ -18,7 +18,7 @@ import { FormField } from "@/components/shared/FormField";
 import { ShipmentTimeline } from "./ShipmentTimeline";
 import { useShipment } from "@/features/shipments/hooks";
 import { useCancelShipment, useRequestPickup } from "@/features/shipments/hooks";
-import { useInitiateBkashPayment } from "@/features/payments/hooks";
+import { useInitiateBkashPayment, useInitiateStripeCheckout } from "@/features/payments/hooks";
 import { cancelShipmentSchema, type CancelShipmentFormValues } from "@/lib/validations/shipment";
 import { formatDate, formatCurrency, PARCEL_TYPE_LABELS } from "@/lib/utils";
 
@@ -28,6 +28,7 @@ export function ShipmentDetailView({ id }: { id: string }) {
   const { mutate: cancelShipment, isPending: isCancelling } = useCancelShipment();
   const { mutate: requestPickup, isPending: isRequestingPickup } = useRequestPickup();
   const { mutate: initiatePayment, isPending: isPaymentPending } = useInitiateBkashPayment();
+  const { mutate: initiateStripe, isPending: isStripePending } = useInitiateStripeCheckout();
 
   const {
     register,
@@ -100,13 +101,25 @@ export function ShipmentDetailView({ id }: { id: string }) {
       {/* Action buttons */}
       <div className="flex flex-wrap gap-2">
         {canPay && (
-          <Button
-            onClick={() => initiatePayment(id)}
-            loading={isPaymentPending}
-          >
-            <CreditCard className="mr-2 size-4" />
-            Pay with bKash
-          </Button>
+          <>
+            <Button
+              onClick={() => initiatePayment(id)}
+              loading={isPaymentPending}
+              disabled={isStripePending}
+            >
+              <CreditCard className="mr-2 size-4" />
+              Pay with bKash
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => initiateStripe(id)}
+              loading={isStripePending}
+              disabled={isPaymentPending}
+            >
+              <CreditCard className="mr-2 size-4" />
+              Pay with Card (Stripe)
+            </Button>
+          </>
         )}
         {canRequestPickup && (
           <Button

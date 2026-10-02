@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { ArrowLeft, Shield, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, use } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -76,7 +76,7 @@ export default function AdminUserDetailPage({ params }: { params: Promise<{ id: 
             Change role
           </CardTitle>
         </CardHeader>
-        <form onSubmit={form.handleSubmit((vals) => updateRole({ id: params.id, role: vals.role }))}>
+        <form onSubmit={form.handleSubmit((vals) => updateRole({ id, role: vals.role }))}>
           <CardContent className="space-y-4">
             <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
               Changing a user's role will affect what they can access immediately on their next API call.
@@ -132,7 +132,7 @@ export default function AdminUserDetailPage({ params }: { params: Promise<{ id: 
         description={`Are you sure you want to delete ${user.firstName} ${user.lastName}'s account? This action soft-deletes the account.`}
         confirmLabel="Delete account"
         variant="destructive"
-        onConfirm={() => deleteUser(params.id, { onSuccess: () => router.push("/dashboard/admin/users") })}
+        onConfirm={() => deleteUser(id, { onSuccess: () => router.push("/dashboard/admin/users") })}
         loading={isDeleting}
       />
     </div>

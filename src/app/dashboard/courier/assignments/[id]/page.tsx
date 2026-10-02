@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, CheckCircle, XCircle, Package, MapPin, Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, use } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,7 +30,8 @@ type RejectFormValues = z.infer<typeof rejectSchema>;
 type DeliveryFailedFormValues = z.infer<typeof deliveryFailedSchema>;
 type DeliveryFormValues = z.infer<typeof deliverySchema>;
 
-export default function AssignmentDetailPage({ params }: { params: { id: string } }) {
+export default function AssignmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const { data, isLoading, isError } = useAssignments({ limit: 100 });
   const [showRejectDialog, setShowRejectDialog] = useState(false);
   const [showDeliveryDialog, setShowDeliveryDialog] = useState(false);
@@ -47,7 +48,7 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
   const deliveryFailedForm = useForm<DeliveryFailedFormValues>({ resolver: zodResolver(deliveryFailedSchema) });
   const deliveryForm = useForm<DeliveryFormValues>({ resolver: zodResolver(deliverySchema) });
 
-  const assignment = data?.assignments.find((a) => a.id === params.id);
+  const assignment = data?.assignments.find((a) => a.id === id);
 
   if (isLoading) {
     return <div className="h-64 animate-pulse rounded-xl bg-muted" />;

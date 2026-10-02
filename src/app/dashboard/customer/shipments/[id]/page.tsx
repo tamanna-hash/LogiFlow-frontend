@@ -5,10 +5,11 @@ import { ShipmentDetailView } from "./ShipmentDetailView";
 
 export const metadata: Metadata = { title: "Shipment Details" };
 
-export default function ShipmentDetailPage({
+export default async function ShipmentDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <ShipmentDetailView id={params.id} />;
+  const { id } = await params;
+  return <ShipmentDetailView id={id} />;
 }

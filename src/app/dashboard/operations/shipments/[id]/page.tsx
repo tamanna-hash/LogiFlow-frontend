@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useState, use } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,8 +30,9 @@ const assignSchema = z.object({
   type: z.enum(["PICKUP","DELIVERY","RETURN"]),
 });
 
-export default function OperationsShipmentDetailPage({ params }: { params: { id: string } }) {
-  const { data: shipment, isLoading, isError, refetch } = useShipment(params.id);
+export default function OperationsShipmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const { data: shipment, isLoading, isError, refetch } = useShipment(id);
   const { data: couriersData } = useCouriers({ availability: "AVAILABLE", limit: 50 });
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateOperationsShipmentStatus();
   const { mutate: assign, isPending: isAssigning } = useCreateAssignment();
@@ -70,12 +71,12 @@ export default function OperationsShipmentDetailPage({ params }: { params: { id:
         <Button variant="outline" size="sm" onClick={() => setShowStatusForm(!showStatusForm)}>Update status</Button>
         {canAssign && <Button size="sm" onClick={() => setShowAssignForm(!showAssignForm)}>Assign courier</Button>}
         {shipment.status === "DELIVERY_FAILED" && (
-          <Button variant="outline" size="sm" onClick={() => initiateReturn({ id: params.id, reason: "Return initiated by operations manager" })}>
+          <Button variant="outline" size="sm" onClick={() => initiateReturn({ id, reason: "Return initiated by operations manager" })}>
             Initiate return
           </Button>
         )}
         {["CREATED","PICKUP_REQUESTED"].includes(shipment.status) && (
-          <Button variant="destructive" size="sm" onClick={() => cancel({ id: params.id, reason: "Cancelled by operations manager" })}>
+          <Button variant="destructive" size="sm" onClick={() => cancel({ id, reason: "Cancelled by operations manager" })}>
             Cancel
           </Button>
         )}
@@ -85,7 +86,7 @@ export default function OperationsShipmentDetailPage({ params }: { params: { id:
         <Card>
           <CardHeader className="pb-3"><CardTitle className="text-base">Update shipment status</CardTitle></CardHeader>
           <form onSubmit={statusForm.handleSubmit((vals) => {
-            updateStatus({ id: params.id, data: { status: vals.status as ShipmentStatus, reason: vals.reason } }, { onSuccess: () => setShowStatusForm(false) });
+            updateStatus({ id, data: { status: vals.status as ShipmentStatus, reason: vals.reason } }, { onSuccess: () => setShowStatusForm(false) });
           })}>
             <CardContent className="space-y-4">
               <FormField label="New status" htmlFor="newStatus" error={statusForm.formState.errors.status?.message as string} required>
@@ -116,7 +117,7 @@ export default function OperationsShipmentDetailPage({ params }: { params: { id:
         <Card>
           <CardHeader className="pb-3"><CardTitle className="text-base">Assign courier</CardTitle></CardHeader>
           <form onSubmit={assignForm.handleSubmit((vals) => {
-            assign({ shipmentId: params.id, courierProfileId: vals.courierProfileId as string, type: vals.type as string }, { onSuccess: () => setShowAssignForm(false) });
+            assign({ shipmentId: id, courierProfileId: vals.courierProfileId as string, type: vals.type as string }, { onSuccess: () => setShowAssignForm(false) });
           })}>
             <CardContent className="space-y-4">
               <FormField label="Courier" htmlFor="courier" error={assignForm.formState.errors.courierProfileId?.message as string} required>

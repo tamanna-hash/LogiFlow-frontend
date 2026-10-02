@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useState, use } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,10 +29,11 @@ const transferSchema = z.object({
 });
 type TransferFormValues = z.infer<typeof transferSchema>;
 
-export default function HubShipmentDetailPage({ params }: { params: { id: string } }) {
+export default function HubShipmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { user } = useAuthStore();
+  const { id } = use(params);
   const hubId = user?.hubManagerProfile?.hubId ?? "";
-  const { data: shipment, isLoading, isError, refetch } = useShipment(params.id);
+  const { data: shipment, isLoading, isError, refetch } = useShipment(id);
   const { data: hubsData } = useHubs({ limit: 50, isActive: true });
   const { mutate: createTransfer, isPending } = useCreateTransfer();
   const [showTransfer, setShowTransfer] = useState(false);
@@ -47,7 +48,7 @@ export default function HubShipmentDetailPage({ params }: { params: { id: string
 
   function handleTransfer(vals: TransferFormValues) {
     createTransfer(
-      { hubId, data: { shipmentId: params.id, toHubId: vals.toHubId, estimatedArrival: vals.estimatedArrival, notes: vals.notes } },
+      { hubId, data: { shipmentId: id, toHubId: vals.toHubId, estimatedArrival: vals.estimatedArrival, notes: vals.notes } },
       { onSuccess: () => setShowTransfer(false) }
     );
   }
