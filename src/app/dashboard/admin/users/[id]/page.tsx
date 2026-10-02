@@ -78,7 +78,7 @@ export default function AdminUserDetailPage({ params }: { params: Promise<{ id: 
         </CardHeader>
         <form onSubmit={form.handleSubmit((vals) => updateRole({ id, role: vals.role }))}>
           <CardContent className="space-y-4">
-            <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
+            <div className="rounded-lg bg-yellow-500/10 border border-yellow-500/30 p-3 text-sm text-yellow-700 dark:text-yellow-400">
               Changing a user's role will affect what they can access immediately on their next API call.
             </div>
             <FormField label="New role" htmlFor="roleSelect">

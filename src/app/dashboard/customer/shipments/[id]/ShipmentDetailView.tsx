@@ -253,7 +253,7 @@ export function ShipmentDetailView({ id }: { id: string }) {
             <PaymentStatusBadge status={shipment.paymentStatus} />
           </div>
           {canPay && (
-            <div className="mt-4 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
+            <div className="mt-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30 p-3 text-sm text-yellow-700 dark:text-yellow-400">
               Payment is required before pickup can be arranged.
             </div>
           )}

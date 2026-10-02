@@ -164,7 +164,7 @@ export function useCreateZone() {
 export function useUpdateZone() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Zone> }) => updateZone(id, data),
+    mutationFn: ({ id, data }: { id: string; data: Partial<Zone> }) => updateZone(id, { name: data.name, code: data.code, description: data.description ?? undefined }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: zoneKeys.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.hubs() });

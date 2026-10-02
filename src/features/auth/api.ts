@@ -59,6 +59,10 @@ export async function changePassword(data: {
   await apiPatch<void>(AUTH_ENDPOINTS.changePassword, data);
 }
 
+export async function setPassword(data: { newPassword: string }): Promise<void> {
+  await apiPatch<void>(AUTH_ENDPOINTS.setPassword, data);
+}
+
 export async function getCurrentUser(): Promise<AuthUser> {
   const resp = await apiGet<AuthUser>(USER_ENDPOINTS.me);
   return resp.data;

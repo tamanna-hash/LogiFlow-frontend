@@ -5,6 +5,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Package, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useAuthStore } from "@/lib/auth";
 import { getRoleDashboardPath } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -62,6 +63,7 @@ export function PublicNav() {
 
         {/* CTA buttons */}
         <div className="hidden md:flex items-center gap-2">
+          <ThemeToggle />
           {user ? (
             <Button asChild size="sm">
               <Link href={getRoleDashboardPath(user.role as Role)}>Dashboard</Link>

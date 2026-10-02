@@ -11,6 +11,7 @@ import {
   registerUser,
   verifyEmail,
   changePassword,
+  setPassword,
   getCurrentUser,
 } from "./api";
 import { getRoleDashboardPath } from "@/lib/auth";
@@ -119,6 +120,20 @@ export function useChangePassword() {
     },
     onError: (error: ApiError) => {
       toast.error(error.message ?? "Failed to change password");
+    },
+  });
+}
+
+// ── Set password (Google-only users) ─────────────────────────────────────────
+
+export function useSetPassword() {
+  return useMutation({
+    mutationFn: setPassword,
+    onSuccess: () => {
+      toast.success("Password set. You can now sign in with email and password.");
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to set password");
     },
   });
 }

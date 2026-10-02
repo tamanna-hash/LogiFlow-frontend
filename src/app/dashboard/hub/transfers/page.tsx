@@ -37,10 +37,8 @@ export default function HubTransfersPage() {
   function refetch() { refetchInbound(); refetchTransit(); }
 
   // Filter to shipments at or heading to this hub (best effort without transfer IDs from the API)
-  const arrivedShipments = (inboundData?.shipments ?? []).filter(
-    s => s.currentHubId === hubId
-  );
-  const inTransitShipments = (inTransitData?.shipments ?? []);
+  const arrivedShipments = inboundData?.shipments ?? [];
+  const inTransitShipments = inTransitData?.shipments ?? [];
 
   if (!hubId) {
     return (
@@ -80,7 +78,7 @@ export default function HubTransfersPage() {
                 <CardContent className="p-4 flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <p className="font-mono text-sm font-semibold">{s.trackingNumber}</p>
-                    <p className="text-xs text-muted-foreground">{s.senderCity} → {s.recipientCity}</p>
+                    <p className="text-xs text-muted-foreground">{s.recipientCity}</p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <Badge variant="secondary">{s.status.replace(/_/g, " ")}</Badge>
@@ -114,7 +112,7 @@ export default function HubTransfersPage() {
                 <CardContent className="p-4 flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <p className="font-mono text-sm font-semibold">{s.trackingNumber}</p>
-                    <p className="text-xs text-muted-foreground">{s.senderCity} → {s.recipientCity}</p>
+                    <p className="text-xs text-muted-foreground">{s.recipientCity}</p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <Badge variant="secondary">In Transit</Badge>

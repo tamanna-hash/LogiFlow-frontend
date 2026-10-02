@@ -21,6 +21,8 @@ export async function initiateStripeCheckout(
   );
   return resp.data;
 }
+
+export async function getPaymentByShipment(shipmentId: string): Promise<Payment> {
   const resp = await apiGet<Payment>(PAYMENT_ENDPOINTS.byShipment(shipmentId));
   return resp.data;
 }

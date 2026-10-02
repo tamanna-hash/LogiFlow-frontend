@@ -25,12 +25,12 @@ const ruleSchema = z.object({
   name:                  z.string().min(2, "Name is required"),
   basePrice:             z.coerce.number().min(0),
   pricePerKg:            z.coerce.number().min(0),
-  baseWeightKg:          z.coerce.number().min(0).default(1),
-  zoneSurcharge:         z.coerce.number().min(0).default(0),
-  deliveryTypeSurcharge: z.coerce.number().min(0).default(0),
+  baseWeightKg:          z.coerce.number().min(0),
+  zoneSurcharge:         z.coerce.number().min(0),
+  deliveryTypeSurcharge: z.coerce.number().min(0),
   deliveryType:          z.enum(["STANDARD","EXPRESS","SAME_DAY",""]).optional(),
   parcelType:            z.enum(["DOCUMENT","REGULAR","FRAGILE","OVERSIZED",""]).optional(),
-  isDefault:             z.boolean().default(false),
+  isDefault:             z.boolean(),
 });
 type RuleFormValues = z.infer<typeof ruleSchema>;
 
@@ -58,7 +58,7 @@ function RuleDialog({
       deliveryType: (rule.deliveryType ?? "") as RuleFormValues["deliveryType"],
       parcelType: (rule.parcelType ?? "") as RuleFormValues["parcelType"],
       isDefault: rule.isDefault,
-    } : { baseWeightKg: 1, zoneSurcharge: 0, deliveryTypeSurcharge: 0, isDefault: false },
+    } as RuleFormValues : { baseWeightKg: 1, zoneSurcharge: 0, deliveryTypeSurcharge: 0, isDefault: false } as RuleFormValues,
   });
 
   if (!open) return null;

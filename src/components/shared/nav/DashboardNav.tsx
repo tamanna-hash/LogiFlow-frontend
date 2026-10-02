@@ -187,6 +187,11 @@ const NAV_ITEMS: Record<Role, NavItem[]> = {
       icon: <ClipboardList className="size-4" />,
     },
     {
+      label: "Zones",
+      href: "/dashboard/admin/zones",
+      icon: <MapPin className="size-4" />,
+    },
+    {
       label: "Profile",
       href: "/dashboard/admin/profile",
       icon: <User className="size-4" />,
