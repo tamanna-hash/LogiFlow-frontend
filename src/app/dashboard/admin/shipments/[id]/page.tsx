@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { use } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShipmentStatusBadge, PaymentStatusBadge } from "@/components/shared/StatusBadge";
@@ -12,8 +13,9 @@ import { ShipmentTimeline } from "@/app/dashboard/customer/shipments/[id]/Shipme
 import { useShipment } from "@/features/shipments/hooks";
 import { formatCurrency, formatDate, PARCEL_TYPE_LABELS } from "@/lib/utils";
 
-export default function AdminShipmentDetailPage({ params }: { params: { id: string } }) {
-  const { data: shipment, isLoading, isError, refetch } = useShipment(params.id);
+export default function AdminShipmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const { data: shipment, isLoading, isError, refetch } = useShipment(id);
 
   if (isLoading) return <div className="h-48 animate-pulse rounded-xl bg-muted max-w-3xl" />;
   if (isError || !shipment) return <ErrorState title="Shipment not found" onRetry={() => refetch()} />;
@@ -74,7 +76,7 @@ export default function AdminShipmentDetailPage({ params }: { params: { id: stri
         </CardContent>
       </Card>
 
-      <ShipmentTimeline shipmentId={params.id} />
+      <ShipmentTimeline shipmentId={id} />
     </div>
   );
 }

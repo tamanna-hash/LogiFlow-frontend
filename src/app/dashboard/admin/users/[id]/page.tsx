@@ -23,9 +23,10 @@ import { useRouter } from "next/navigation";
 const roleSchema = z.object({ role: z.enum(["CUSTOMER","COURIER","HUB_MANAGER","OPERATIONS_MANAGER","ADMIN"]) });
 type RoleFormValues = z.infer<typeof roleSchema>;
 
-export default function AdminUserDetailPage({ params }: { params: { id: string } }) {
+export default function AdminUserDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const { data: user, isLoading, isError, refetch } = useUser(params.id);
+  const { id } = use(params);
+  const { data: user, isLoading, isError, refetch } = useUser(id);
   const { mutate: updateRole, isPending: isUpdatingRole } = useUpdateUserRole();
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);

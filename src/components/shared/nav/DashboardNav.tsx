@@ -107,7 +107,12 @@ const NAV_ITEMS: Record<Role, NavItem[]> = {
       href: "/dashboard/customer/notifications",
       icon: <Bell className="size-4" />,
     },
-  ],
+    {
+      label: "Profile",
+      href: "/dashboard/hub/profile",
+      icon: <User className="size-4" />,
+    },
+  ], // end HUB_MANAGER
   OPERATIONS_MANAGER: [
     {
       label: "Overview",
@@ -138,6 +143,11 @@ const NAV_ITEMS: Record<Role, NavItem[]> = {
       label: "Notifications",
       href: "/dashboard/customer/notifications",
       icon: <Bell className="size-4" />,
+    },
+    {
+      label: "Profile",
+      href: "/dashboard/operations/profile",
+      icon: <User className="size-4" />,
     },
   ],
   ADMIN: [
@@ -176,6 +186,11 @@ const NAV_ITEMS: Record<Role, NavItem[]> = {
       href: "/dashboard/admin/audit-logs",
       icon: <ClipboardList className="size-4" />,
     },
+    {
+      label: "Profile",
+      href: "/dashboard/admin/profile",
+      icon: <User className="size-4" />,
+    },
   ],
 };
 
@@ -206,7 +221,7 @@ export function DashboardNav({ role, onNavigate }: DashboardNavProps) {
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   isActive
                     ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    : "text-sidebar-foreground/80 hover:bg-white/10 hover:text-white dark:hover:bg-white/10"
                 )}
                 aria-current={isActive ? "page" : undefined}
               >

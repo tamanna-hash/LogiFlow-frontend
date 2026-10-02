@@ -1,10 +1,14 @@
 import { apiPost, apiPatch, apiGet } from "@/lib/api/client";
 import { AUTH_ENDPOINTS, USER_ENDPOINTS } from "@/lib/api/endpoints";
-import type { AuthUser, TokenPair } from "@/types";
+import type { AuthUser } from "@/types";
+
+// Backend returns tokens flat: { user, accessToken, refreshToken }
+// NOT nested as { user, tokens: { accessToken, refreshToken } }
 
 export interface LoginResponse {
   user: AuthUser;
-  tokens: TokenPair;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface RegisterResponse {
@@ -13,7 +17,8 @@ export interface RegisterResponse {
 
 export interface VerifyEmailResponse {
   user: AuthUser;
-  tokens: TokenPair;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export async function registerUser(data: {

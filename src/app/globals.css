@@ -3,53 +3,122 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   LIGHT THEME  (spec palette)
+   ─────────────────────────────────────────────────────────────────────────── */
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222 47% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-  --primary: 221 83% 53%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 210 40% 96%;
+  /* Core */
+  --background:        210 40% 98%;   /* #F8FAFC */
+  --foreground:        222 47% 11%;   /* #101828 */
+
+  /* Surfaces */
+  --card:              0   0%  100%;  /* #FFFFFF */
+  --card-foreground:   222 47% 11%;
+  --popover:           0   0%  100%;
+  --popover-foreground:222 47% 11%;
+
+  /* Brand */
+  --primary:           221 83% 53%;  /* #2563EB */
+  --primary-foreground:0   0% 100%;
+
+  /* Secondary / Accent / Muted */
+  --secondary:         210 40% 96%;
   --secondary-foreground: 222 47% 11%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 210 40% 96%;
+  --muted:             210 40% 96%;
+  --muted-foreground:  220 14% 46%;  /* #667085 */
+  --accent:            210 40% 96%;
   --accent-foreground: 222 47% 11%;
-  --destructive: 0 84% 60%;
+
+  /* Status */
+  --destructive:       0   84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 221 83% 53%;
+
+  /* Borders & inputs */
+  --border:            214 32% 88%;  /* #E2E8F0 */
+  --input:             214 32% 88%;
+  --ring:              221 83% 53%;
+
+  /* Sidebar */
+  --sidebar:           222 47% 11%;  /* #101828 */
+  --sidebar-foreground:210 40% 98%;
+
+  /* Misc */
   --radius: 0.5rem;
   --font-geist-sans: system-ui, -apple-system, sans-serif;
-  --font-geist-mono: ui-monospace, monospace;
+  --font-geist-mono:  ui-monospace, monospace;
+
+  /* ── Semantic shipment-status colors ─────────────────────────────────────── */
+  --status-delivered-bg:   142 76% 93%;   /* green-100 */
+  --status-delivered-fg:   142 71% 25%;   /* green-800 */
+  --status-transit-bg:     213 94% 93%;   /* blue-100  */
+  --status-transit-fg:     213 94% 28%;   /* blue-800  */
+  --status-pending-bg:     45  93% 93%;   /* amber-100 */
+  --status-pending-fg:     32  95% 28%;   /* amber-800 */
+  --status-delayed-bg:     25  95% 93%;   /* orange-100*/
+  --status-delayed-fg:     21  90% 28%;   /* orange-800*/
+  --status-failed-bg:      0   86% 93%;   /* red-100   */
+  --status-failed-fg:      0   72% 35%;   /* red-800   */
+  --status-cancelled-bg:   220 14% 93%;   /* slate-100 */
+  --status-cancelled-fg:   220 14% 30%;   /* slate-700 */
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   DARK THEME  (spec palette)
+   ─────────────────────────────────────────────────────────────────────────── */
 .dark {
-  --background: 222 47% 7%;
-  --foreground: 210 40% 98%;
-  --card: 222 47% 10%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222 47% 10%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217 91% 60%;
-  --primary-foreground: 222 47% 7%;
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  --accent: 217 33% 17%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 63% 31%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --ring: 224 76% 48%;
+  /* Core */
+  --background:        220 42% 9%;    /* #0B1220 */
+  --foreground:        213 31% 95%;   /* #F1F5F9 */
+
+  /* Surfaces */
+  --card:              220 42% 13%;   /* #111C2E */
+  --card-foreground:   213 31% 95%;
+  --popover:           220 42% 13%;
+  --popover-foreground:213 31% 95%;
+
+  /* Brand */
+  --primary:           217 91% 60%;  /* #3B82F6 */
+  --primary-foreground:220 42% 9%;
+
+  /* Secondary / Accent / Muted */
+  --secondary:         217 33% 17%;
+  --secondary-foreground:213 31% 95%;
+  --muted:             217 33% 17%;
+  --muted-foreground:  215 20% 63%;  /* #A3B0C2 */
+  --accent:            217 33% 17%;
+  --accent-foreground: 213 31% 95%;
+
+  /* Status */
+  --destructive:       0   63% 31%;
+  --destructive-foreground: 213 31% 95%;
+
+  /* Borders & inputs */
+  --border:            217 30% 22%;  /* #263449 */
+  --input:             217 30% 22%;
+  --ring:              217 91% 60%;
+
+  /* Sidebar */
+  --sidebar:           220 42% 6%;   /* #080E19 */
+  --sidebar-foreground:213 31% 95%;
+
+  /* ── Semantic shipment-status colors (dark) ──────────────────────────────── */
+  --status-delivered-bg:   142 42% 18%;
+  --status-delivered-fg:   142 76% 65%;
+  --status-transit-bg:     213 60% 18%;
+  --status-transit-fg:     213 94% 72%;
+  --status-pending-bg:     38  60% 18%;
+  --status-pending-fg:     45  93% 68%;
+  --status-delayed-bg:     25  60% 18%;
+  --status-delayed-fg:     25  95% 68%;
+  --status-failed-bg:      0   45% 18%;
+  --status-failed-fg:      0   86% 70%;
+  --status-cancelled-bg:   220 20% 18%;
+  --status-cancelled-fg:   220 14% 70%;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE STYLES
+   ─────────────────────────────────────────────────────────────────────────── */
 * {
   border-color: hsl(var(--border));
   box-sizing: border-box;
@@ -61,13 +130,19 @@ body {
   font-family: var(--font-geist-sans);
 }
 
-/* Smooth focus visible */
+/* Smooth theme transitions — applied only after the first render via JS */
+.theme-transition,
+.theme-transition * {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.1s ease !important;
+}
+
+/* Focus ring */
 :focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 
-/* Skip to main content */
+/* Skip-to-main-content link */
 .skip-nav {
   position: absolute;
   top: -40px;
@@ -86,3 +161,33 @@ body {
 .skip-nav:focus {
   top: 6px;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SIDEBAR UTILITY CLASS
+   Applied by DashboardSidebar so it always uses the sidebar token pair.
+   ─────────────────────────────────────────────────────────────────────────── */
+.sidebar-surface {
+  background-color: hsl(var(--sidebar));
+  color: hsl(var(--sidebar-foreground));
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SHIPMENT STATUS BADGE UTILITIES
+   Usage: <span className="status-badge status-delivered">Delivered</span>
+   ─────────────────────────────────────────────────────────────────────────── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.status-delivered  { background: hsl(var(--status-delivered-bg));  color: hsl(var(--status-delivered-fg));  }
+.status-in-transit { background: hsl(var(--status-transit-bg));    color: hsl(var(--status-transit-fg));    }
+.status-pending    { background: hsl(var(--status-pending-bg));    color: hsl(var(--status-pending-fg));    }
+.status-delayed    { background: hsl(var(--status-delayed-bg));    color: hsl(var(--status-delayed-fg));    }
+.status-failed     { background: hsl(var(--status-failed-bg));     color: hsl(var(--status-failed-fg));     }
+.status-cancelled  { background: hsl(var(--status-cancelled-bg));  color: hsl(var(--status-cancelled-fg));  }

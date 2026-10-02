@@ -4,13 +4,14 @@
  */
 
 export const AUTH_ENDPOINTS = {
-  register: "/auth/register",
-  verifyEmail: "/auth/verify-email",
-  login: "/auth/login",
-  refresh: "/auth/refresh",
-  logout: "/auth/logout",
+  register:       "/auth/register",
+  verifyEmail:    "/auth/verify-email",
+  login:          "/auth/login",
+  refresh:        "/auth/refresh",
+  logout:         "/auth/logout",
   changePassword: "/auth/change-password",
-  googleAuth: "/auth/google",
+  setPassword:    "/auth/set-password",
+  googleAuth:     "/auth/google",
 } as const;
 
 export const USER_ENDPOINTS = {

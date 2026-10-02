@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormField } from "@/components/shared/FormField";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { useRegister } from "@/features/auth/hooks";
 import { registerSchema, type RegisterFormValues } from "@/lib/validations/auth";
 
@@ -21,7 +22,6 @@ export function RegisterForm() {
   const {
     register: rhfRegister,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -37,10 +37,7 @@ export function RegisterForm() {
     };
     register(payload, {
       onSuccess: () => {
-        // Navigate to verification page, passing email via query param
-        router.push(
-          `/verify-email?email=${encodeURIComponent(values.email)}`
-        );
+        router.push(`/verify-email?email=${encodeURIComponent(values.email)}`);
       },
     });
   }
@@ -49,10 +46,20 @@ export function RegisterForm() {
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Create account</CardTitle>
-        <CardDescription>
-          Join LogiFlow to manage your shipments
-        </CardDescription>
+        <CardDescription>Join LogiFlow to manage your shipments</CardDescription>
       </CardHeader>
+
+      <CardContent className="space-y-4 pb-0">
+        {/* Google sign-up */}
+        <GoogleSignInButton label="Sign up with Google" disabled={isPending} />
+
+        {/* Divider */}
+        <div className="relative flex items-center gap-3" aria-hidden="true">
+          <div className="flex-1 border-t" />
+          <span className="text-xs text-muted-foreground">or register with email</span>
+          <div className="flex-1 border-t" />
+        </div>
+      </CardContent>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <CardContent className="space-y-4">

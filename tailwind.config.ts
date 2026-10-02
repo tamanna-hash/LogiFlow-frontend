@@ -40,6 +40,17 @@ const config: Config = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar))",
+          foreground: "hsl(var(--sidebar-foreground))",
+        },
+        // Shipment status semantic colors
+        "status-delivered":  "hsl(var(--status-delivered-fg))",
+        "status-transit":    "hsl(var(--status-transit-fg))",
+        "status-pending":    "hsl(var(--status-pending-fg))",
+        "status-delayed":    "hsl(var(--status-delayed-fg))",
+        "status-failed":     "hsl(var(--status-failed-fg))",
+        "status-cancelled":  "hsl(var(--status-cancelled-fg))",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

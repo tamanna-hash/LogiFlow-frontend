@@ -17,10 +17,21 @@ import { useLogout } from "@/features/auth/hooks";
 import { useUnreadCount } from "@/features/notifications/hooks";
 import { getInitials } from "@/lib/utils";
 import { APP_NAME } from "@/config";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import type { Role } from "@/types";
 
 interface DashboardHeaderProps {
   onMenuToggle: () => void;
 }
+
+// Role-to-dashboard-prefix mapping — single source of truth
+const ROLE_PREFIX: Record<Role, string> = {
+  CUSTOMER:            "customer",
+  COURIER:             "courier",
+  HUB_MANAGER:         "hub",
+  OPERATIONS_MANAGER:  "operations",
+  ADMIN:               "admin",
+};
 
 export function DashboardHeader({ onMenuToggle }: DashboardHeaderProps) {
   const { user } = useAuthStore();
@@ -29,11 +40,9 @@ export function DashboardHeader({ onMenuToggle }: DashboardHeaderProps) {
 
   if (!user) return null;
 
-  const notifHref = `/dashboard/${
-    user.role === "CUSTOMER" ? "customer" : 
-    user.role === "COURIER" ? "customer" : 
-    "customer"
-  }/notifications`;
+  const prefix = ROLE_PREFIX[user.role as Role] ?? "customer";
+  const profileHref      = `/dashboard/${prefix}/profile`;
+  const notificationsHref = `/dashboard/customer/notifications`;
 
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center border-b bg-background px-4 gap-4">
@@ -56,8 +65,13 @@ export function DashboardHeader({ onMenuToggle }: DashboardHeaderProps) {
       <div className="flex-1" />
 
       {/* Notifications */}
-      <Button variant="ghost" size="icon" asChild aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}>
-        <Link href="/dashboard/customer/notifications">
+      <Button
+        variant="ghost"
+        size="icon"
+        asChild
+        aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
+      >
+        <Link href={notificationsHref}>
           <span className="relative">
             <Bell className="size-5" />
             {unreadCount > 0 && (
@@ -72,12 +86,22 @@ export function DashboardHeader({ onMenuToggle }: DashboardHeaderProps) {
         </Link>
       </Button>
 
+      {/* Theme toggle */}
+      <ThemeToggle />
+
       {/* User menu */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-2 px-2" aria-label="User menu">
+          <Button
+            variant="ghost"
+            className="flex items-center gap-2 px-2"
+            aria-label="User menu"
+          >
             <Avatar className="size-8">
-              <AvatarImage src={user.avatarUrl ?? undefined} alt={`${user.firstName} ${user.lastName}`} />
+              <AvatarImage
+                src={user.avatarUrl ?? undefined}
+                alt={`${user.firstName} ${user.lastName}`}
+              />
               <AvatarFallback className="text-xs">
                 {getInitials(user.firstName, user.lastName)}
               </AvatarFallback>
@@ -90,12 +114,16 @@ export function DashboardHeader({ onMenuToggle }: DashboardHeaderProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuLabel className="font-normal">
-            <div className="text-sm font-medium">{user.firstName} {user.lastName}</div>
-            <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+            <div className="text-sm font-medium">
+              {user.firstName} {user.lastName}
+            </div>
+            <div className="text-xs text-muted-foreground truncate">
+              {user.email}
+            </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={`/dashboard/${user.role === "CUSTOMER" ? "customer" : user.role === "COURIER" ? "courier" : user.role === "ADMIN" ? "admin" : user.role === "HUB_MANAGER" ? "hub" : "operations"}/profile`}>
+            <Link href={profileHref}>
               <User className="mr-2 size-4" aria-hidden="true" />
               Profile
             </Link>

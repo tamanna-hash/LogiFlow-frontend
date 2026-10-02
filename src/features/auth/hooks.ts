@@ -53,7 +53,8 @@ export function useVerifyEmail() {
   return useMutation({
     mutationFn: verifyEmail,
     onSuccess: (data) => {
-      setAuth(data.user, data.tokens);
+      const tokens = { accessToken: data.accessToken, refreshToken: data.refreshToken };
+      setAuth(data.user, tokens);
       queryClient.setQueryData(queryKeys.currentUser, data.user);
       toast.success("Email verified! Welcome to LogiFlow.");
       router.push(getRoleDashboardPath(data.user.role));
@@ -74,7 +75,8 @@ export function useLogin() {
   return useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      setAuth(data.user, data.tokens);
+      const tokens = { accessToken: data.accessToken, refreshToken: data.refreshToken };
+      setAuth(data.user, tokens);
       queryClient.setQueryData(queryKeys.currentUser, data.user);
       toast.success(`Welcome back, ${data.user.firstName}!`);
       router.push(getRoleDashboardPath(data.user.role));

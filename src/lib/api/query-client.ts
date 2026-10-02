@@ -8,10 +8,11 @@ export function createQueryClient() {
         staleTime: 60 * 1000, // 1 minute
         gcTime: 5 * 60 * 1000, // 5 minutes
         retry: (failureCount, error) => {
-          // Don't retry on 401, 403, 404, or 422
+          // Don't retry client errors — they won't resolve on their own
           if (error instanceof ApiError) {
-            if ([401, 403, 404, 422].includes(error.status)) return false;
+            if ([400, 401, 403, 404, 409, 422].includes(error.status)) return false;
           }
+          // Allow up to 2 retries for network/server errors
           return failureCount < 2;
         },
         refetchOnWindowFocus: false,

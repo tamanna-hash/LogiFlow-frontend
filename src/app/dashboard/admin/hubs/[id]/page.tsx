@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { ArrowLeft, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { use, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,9 +14,10 @@ import { useHub, useDeactivateHub } from "@/features/hubs/hooks";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/lib/utils";
 
-export default function AdminHubDetailPage({ params }: { params: { id: string } }) {
+export default function AdminHubDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const { data: hub, isLoading, isError, refetch } = useHub(params.id);
+  const { id } = use(params);
+  const { data: hub, isLoading, isError, refetch } = useHub(id);
   const { mutate: deactivate, isPending } = useDeactivateHub();
   const [showDeactivate, setShowDeactivate] = useState(false);
 
@@ -89,7 +90,7 @@ export default function AdminHubDetailPage({ params }: { params: { id: string } 
         description={`Are you sure you want to deactivate ${hub.name}? This will prevent new shipments from being routed to this hub.`}
         confirmLabel="Deactivate"
         variant="destructive"
-        onConfirm={() => deactivate(params.id, { onSuccess: () => router.push("/dashboard/admin/hubs") })}
+        onConfirm={() => deactivate(id, { onSuccess: () => router.push("/dashboard/admin/hubs") })}
         loading={isPending}
       />
     </div>

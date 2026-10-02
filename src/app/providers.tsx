@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { createQueryClient } from "@/lib/api/query-client";
 import { useAuthStore } from "@/lib/auth";
@@ -47,25 +48,44 @@ function SessionExpiryHandler() {
   return null;
 }
 
+// Add a smooth transition class after the first paint to avoid flash on load
+function ThemeTransitionEnabler() {
+  useEffect(() => {
+    // Small delay so the initial paint is complete before transitions are enabled
+    const timer = setTimeout(() => {
+      document.documentElement.classList.add("theme-transition");
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+  return null;
+}
+
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => createQueryClient());
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthSyncHandler />
-      <SessionExpiryHandler />
-      {children}
-      <Toaster
-        position="top-right"
-        richColors
-        closeButton
-        toastOptions={{
-          duration: 4000,
-        }}
-      />
-      {process.env.NODE_ENV === "development" && (
-        <ReactQueryDevtools initialIsOpen={false} />
-      )}
-    </QueryClientProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange={false}
+      storageKey="logiflow-theme"
+    >
+      <QueryClientProvider client={queryClient}>
+        <ThemeTransitionEnabler />
+        <AuthSyncHandler />
+        <SessionExpiryHandler />
+        {children}
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          toastOptions={{ duration: 4000 }}
+        />
+        {process.env.NODE_ENV === "development" && (
+          <ReactQueryDevtools initialIsOpen={false} />
+        )}
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
