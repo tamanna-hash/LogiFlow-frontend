@@ -36,9 +36,8 @@ export function CreateShipmentWizard() {
   const zones = zonesData?.zones ?? [];
 
   // Use unknown to bridge the resolver type mismatch caused by Zod's .default() types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<CreateShipmentFormValues>({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(createShipmentSchema) as any,
     defaultValues: {
       deliveryType: "STANDARD",
@@ -53,7 +52,6 @@ export function CreateShipmentWizard() {
     control,
     getValues,
     trigger,
-    watch,
     formState: { errors },
   } = form;
 

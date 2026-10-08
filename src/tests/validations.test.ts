@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { registerSchema, loginSchema, verifyEmailSchema, changePasswordSchema } from "@/lib/validations/auth";
-import { createShipmentSchema, cancelShipmentSchema, calculatePriceSchema } from "@/lib/validations/shipment";
+import { cancelShipmentSchema, calculatePriceSchema } from "@/lib/validations/shipment";
 
 describe("registerSchema", () => {
   it("accepts valid registration data", () => {

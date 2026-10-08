@@ -118,7 +118,7 @@ export function TrackingSearch() {
                       </p>
                       <p className="text-xs text-muted-foreground">{event.description}</p>
                       {event.location && (
-                        <p className="text-xs text-muted-foreground">📍 {event.location}</p>
+                        <p className="text-xs text-muted-foreground inline-flex items-center gap-1"><MapPin className="size-3" /> {event.location}</p>
                       )}
                       <p className="text-xs text-muted-foreground mt-0.5">
                         {formatDateTime(event.createdAt)}

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardSidebar } from "@/components/shared/nav/DashboardSidebar";
 import { DashboardHeader } from "@/components/shared/nav/DashboardHeader";
-import { useAuthStore, getRoleDashboardPath } from "@/lib/auth";
+import { useAuthStore } from "@/lib/auth";
 import { useCurrentUser } from "@/features/auth/hooks";
 import { Skeleton } from "@/components/shared/Skeleton";
 

@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import {
-  Package, CheckCircle, Clock, XCircle, Plus, Search, CreditCard,
-  Bell, User, ArrowRight, Truck,
+  Package, CheckCircle, XCircle, Plus, Search, CreditCard,
+  Bell, User, ArrowRight, Truck, Hand,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,7 @@ export function CustomerOverview() {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{greeting}, {user?.firstName} 👋</h1>
+          <h1 className="text-2xl font-bold">{greeting}, {user?.firstName} <Hand className="size-5 inline-block align-bottom ml-1" /></h1>
           <p className="text-sm text-muted-foreground mt-1">
             Here&apos;s what&apos;s happening with your shipments today.
           </p>

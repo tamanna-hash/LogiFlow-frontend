@@ -1,8 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
   formatCurrency,
-  formatDate,
-  formatRelativeTime,
   getInitials,
   truncate,
   buildQueryString,

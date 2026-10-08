@@ -15,9 +15,9 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { TableSkeleton } from "@/components/shared/Skeleton";
 import { Pagination } from "@/components/shared/Pagination";
-import { ShipmentStatusBadge, PaymentStatusBadge } from "@/components/shared/StatusBadge";
+import { ShipmentStatusBadge } from "@/components/shared/StatusBadge";
 import { useShipments } from "@/features/shipments/hooks";
-import { formatDate, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import type { ShipmentStatus } from "@/types";
 
 export default function OperationsShipmentsPage() {

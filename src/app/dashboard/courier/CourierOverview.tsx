@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {
-  Truck, CheckCircle, Clock, DollarSign, ClipboardList, User, ArrowRight, Package,
+  Truck, CheckCircle, DollarSign, ClipboardList, User, ArrowRight, Package, Hand,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,7 +38,7 @@ export function CourierOverview() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{greeting}, {user?.firstName} 👋</h1>
+          <h1 className="text-2xl font-bold">{greeting}, {user?.firstName} <Hand className="size-5 inline-block align-bottom ml-1" /></h1>
           <p className="text-sm text-muted-foreground mt-1">Your delivery assignments and performance.</p>
         </div>
         <div className="flex items-center gap-2">

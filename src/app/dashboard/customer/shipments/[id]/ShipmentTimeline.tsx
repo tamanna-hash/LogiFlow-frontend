@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { Clock, CheckCircle, XCircle, AlertCircle, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useShipmentTracking } from "@/features/shipments/hooks";
 import { SHIPMENT_STATUS_LABELS } from "@/lib/utils";
@@ -70,7 +70,7 @@ export function ShipmentTimeline({ shipmentId }: { shipmentId: string }) {
                 </p>
                 <p className="text-xs text-muted-foreground">{event.description}</p>
                 {event.location && (
-                  <p className="text-xs text-muted-foreground">📍 {event.location}</p>
+                  <p className="text-xs text-muted-foreground inline-flex items-center gap-1"><MapPin className="size-3" /> {event.location}</p>
                 )}
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {formatDateTime(event.createdAt)}

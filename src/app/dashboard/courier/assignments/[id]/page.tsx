@@ -15,7 +15,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/shared/FormField";
 import { AssignmentStatusBadge, ShipmentStatusBadge } from "@/components/shared/StatusBadge";
-import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { useAssignments, useAcceptAssignment, useRejectAssignment, useConfirmPickup, useRecordDelivery, useRecordDeliveryFailed } from "@/features/couriers/hooks";
 import { formatDateTime } from "@/lib/utils";
 

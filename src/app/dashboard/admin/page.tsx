@@ -4,12 +4,12 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import {
   Users, Package, Warehouse, CreditCard, TrendingUp, CheckCircle,
-  Clock, BarChart3, Plus, Search, ArrowRight, Activity,
+  Clock, BarChart3, ArrowRight, Activity, Hand,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { StatCard } from "@/components/shared/StatCard";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { ShipmentStatusBadge, PaymentStatusBadge } from "@/components/shared/StatusBadge";
 import { useSystemStats } from "@/features/admin/hooks";
@@ -17,7 +17,7 @@ import { useShipments } from "@/features/shipments/hooks";
 import { useAuthStore } from "@/lib/auth";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
 } from "recharts";
 
@@ -50,7 +50,7 @@ export default function AdminOverviewPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">
-            {greeting}, {user?.firstName} 👋
+            {greeting}, {user?.firstName} <Hand className="size-5 inline-block align-bottom ml-1" />
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Here&apos;s what&apos;s happening on the platform today.
@@ -140,6 +140,14 @@ export default function AdminOverviewPage() {
           {shipmentsLoading ? (
             <div className="space-y-2 p-4">
               {Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-12 animate-pulse rounded-md bg-muted" />)}
+            </div>
+          ) : shipments.length === 0 ? (
+            <div className="py-8">
+              <EmptyState
+                icon={<Package className="size-6" />}
+                title="No shipments yet"
+                description="Shipments will appear here once customers start creating them."
+              />
             </div>
           ) : (
             <div className="overflow-x-auto">

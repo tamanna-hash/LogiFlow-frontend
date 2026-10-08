@@ -2,7 +2,6 @@
 
 export const dynamic = "force-dynamic";
 
-import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { CreditCard, Search } from "lucide-react";
 import { useState } from "react";
@@ -17,7 +16,7 @@ import { TableSkeleton } from "@/components/shared/Skeleton";
 import { Pagination } from "@/components/shared/Pagination";
 import { PaymentStatusBadge } from "@/components/shared/StatusBadge";
 import { usePayments } from "@/features/payments/hooks";
-import { formatDate, formatCurrency, formatDateTime } from "@/lib/utils";
+import { formatCurrency, formatDateTime } from "@/lib/utils";
 
 export default function AdminPaymentsPage() {
   const searchParams = useSearchParams();

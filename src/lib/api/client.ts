@@ -111,7 +111,7 @@ apiClient.interceptors.response.use(
 
       if (isRefreshing) {
         // Wait for the current refresh to complete
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, _reject) => {
           subscribeTokenRefresh((newToken: string) => {
             if (originalRequest.headers) {
               (originalRequest.headers as Record<string, string>)["Authorization"] = `Bearer ${newToken}`;

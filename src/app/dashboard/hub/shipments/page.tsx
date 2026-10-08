@@ -12,7 +12,7 @@ import { ErrorState } from "@/components/shared/ErrorState";
 import { TableSkeleton } from "@/components/shared/Skeleton";
 import { ShipmentStatusBadge } from "@/components/shared/StatusBadge";
 import { useShipments } from "@/features/shipments/hooks";
-import { formatDate, formatCurrency } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 export default function HubShipmentsPage() {
   const { data, isLoading, isError, refetch } = useShipments({ page: 1, limit: 20 });

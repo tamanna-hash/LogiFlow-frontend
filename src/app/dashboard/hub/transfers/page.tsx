@@ -2,7 +2,6 @@
 
 export const dynamic = "force-dynamic";
 
-import { useState } from "react";
 import Link from "next/link";
 import { MapPin, CheckCircle, Clock } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -11,11 +10,8 @@ import { ErrorState } from "@/components/shared/ErrorState";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { useShipments } from "@/features/shipments/hooks";
-import { useConfirmArrival } from "@/features/hubs/hooks";
 import { useAuthStore } from "@/lib/auth";
-import { formatDate } from "@/lib/utils";
 
 export default function HubTransfersPage() {
   const { user } = useAuthStore();
@@ -28,8 +24,7 @@ export default function HubTransfersPage() {
   const { data: inTransitData, isLoading: isLoadingTransit, isError: isErrorTransit, refetch: refetchTransit } =
     useShipments({ status: "IN_TRANSIT", limit: 50 });
 
-  const { mutate: confirmArrival, isPending: isConfirming } = useConfirmArrival();
-  const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  // confirmArrival hook available for future use
 
   const isLoading = isLoadingInbound || isLoadingTransit;
   const isError = isErrorInbound || isErrorTransit;

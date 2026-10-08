@@ -3,12 +3,13 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import {
-  Package, Truck, CheckCircle, Clock, XCircle, AlertCircle, ArrowRight, ClipboardList,
+  Package, Truck, CheckCircle, Clock, AlertCircle, ArrowRight, ClipboardList, Hand,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/shared/StatCard";
-import { ShipmentStatusBadge, PaymentStatusBadge } from "@/components/shared/StatusBadge";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { ShipmentStatusBadge } from "@/components/shared/StatusBadge";
 import { useShipments } from "@/features/shipments/hooks";
 import { useCouriers } from "@/features/couriers/hooks";
 import { useAuthStore } from "@/lib/auth";
@@ -24,7 +25,7 @@ export default function OperationsOverviewPage() {
   const { data: deliveredData } = useShipments({ status: "DELIVERED",           limit: 1 });
   const { data: failedData }    = useShipments({ status: "DELIVERY_FAILED",     limit: 1 });
   const { data: cancelledData } = useShipments({ status: "CANCELLED",           limit: 1 });
-  const { data: recentData }    = useShipments({ limit: 6, sortOrder: "desc" });
+  const { data: recentData, isLoading: shipmentsLoading } = useShipments({ limit: 6, sortOrder: "desc" });
   const { data: couriersData }  = useCouriers({ limit: 1 });
   const { data: availableCouriers } = useCouriers({ availability: "AVAILABLE", limit: 1 });
 
@@ -44,7 +45,7 @@ export default function OperationsOverviewPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{greeting}, {user?.firstName} 👋</h1>
+          <h1 className="text-2xl font-bold">{greeting}, {user?.firstName} <Hand className="size-5 inline-block align-bottom ml-1" /></h1>
           <p className="text-sm text-muted-foreground mt-1">Here&apos;s your logistics operation overview.</p>
         </div>
         <Button asChild>
@@ -118,38 +119,50 @@ export default function OperationsOverviewPage() {
           </Button>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-muted/40">
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">Tracking ID</th>
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden sm:table-cell">Sender</th>
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Destination</th>
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Date</th>
-                  <th className="px-4 py-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {shipments.length === 0 ? (
-                  <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-muted-foreground">Loading shipments…</td></tr>
-                ) : shipments.map((s) => (
-                  <tr key={s.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs font-semibold">{s.trackingNumber}</td>
-                    <td className="px-4 py-3 hidden sm:table-cell text-muted-foreground">{s.senderName}</td>
-                    <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">{s.recipientCity}</td>
-                    <td className="px-4 py-3"><ShipmentStatusBadge status={s.status} /></td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground text-xs">{formatDate(s.createdAt)}</td>
-                    <td className="px-4 py-3">
-                      <Button variant="ghost" size="sm" className="text-xs h-7" asChild>
-                        <Link href={`/dashboard/operations/shipments/${s.id}`}>View</Link>
-                      </Button>
-                    </td>
+          {shipmentsLoading ? (
+            <div className="space-y-2 p-4">
+              {Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-12 animate-pulse rounded-md bg-muted" />)}
+            </div>
+          ) : shipments.length === 0 ? (
+            <div className="py-8">
+              <EmptyState
+                icon={<Package className="size-6" />}
+                title="No shipments yet"
+                description="Shipments will appear here."
+              />
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/40">
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Tracking ID</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden sm:table-cell">Sender</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Destination</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Date</th>
+                    <th className="px-4 py-3" />
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {shipments.map((s) => (
+                    <tr key={s.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3 font-mono text-xs font-semibold">{s.trackingNumber}</td>
+                      <td className="px-4 py-3 hidden sm:table-cell text-muted-foreground">{s.senderName}</td>
+                      <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">{s.recipientCity}</td>
+                      <td className="px-4 py-3"><ShipmentStatusBadge status={s.status} /></td>
+                      <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground text-xs">{formatDate(s.createdAt)}</td>
+                      <td className="px-4 py-3">
+                        <Button variant="ghost" size="sm" className="text-xs h-7" asChild>
+                          <Link href={`/dashboard/operations/shipments/${s.id}`}>View</Link>
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

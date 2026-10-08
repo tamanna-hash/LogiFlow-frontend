@@ -36,8 +36,8 @@ export default function OperationsShipmentDetailPage({ params }: { params: Promi
   const { data: couriersData } = useCouriers({ availability: "AVAILABLE", limit: 50 });
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateOperationsShipmentStatus();
   const { mutate: assign, isPending: isAssigning } = useCreateAssignment();
-  const { mutate: cancel, isPending: isCancelling } = useCancelShipment();
-  const { mutate: initiateReturn, isPending: isReturning } = useInitiateReturn();
+  const { mutate: cancel } = useCancelShipment();
+  const { mutate: initiateReturn } = useInitiateReturn();
   const [showStatusForm, setShowStatusForm] = useState(false);
   const [showAssignForm, setShowAssignForm] = useState(false);
 

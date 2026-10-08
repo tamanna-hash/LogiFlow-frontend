@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { FormField } from "@/components/shared/FormField";
 import { useChangePassword, useSetPassword } from "@/features/auth/hooks";
-import { useAuthStore } from "@/lib/auth";
 import { changePasswordSchema, type ChangePasswordFormValues } from "@/lib/validations/auth";
 
 const setPasswordSchema = z
@@ -111,16 +110,8 @@ function ChangePasswordForm() {
 
 // ── Exported section — renders the right form based on account type ────────────
 export function ChangePasswordSection() {
-  const { user } = useAuthStore();
-  // If user has no password (Google-only), show set-password form
-  // We infer this by checking if there's a googleId — but AuthUser doesn't expose passwordHash.
-  // The backend returns BadRequestError with "no password" message on changePassword for Google users,
-  // so we show the set-password form when the user came from Google OAuth (no way to know for certain
-  // without a backend field). We expose both forms but the backend will reject the wrong one.
-  // For now show SetPassword first if user has no password indicator — we detect via the role being
-  // CUSTOMER and just always show ChangePassword (set-password is a fallback via the hook error).
-  // A cleaner approach: the backend could return hasPassword in /users/me, but it doesn't currently.
-  // So we always render ChangePasswordForm and let the backend return the appropriate error.
+  // Note: user access available via useAuthStore() if needed for hasPassword detection in future
+  // For now always render ChangePasswordForm and let the backend return the appropriate error.
   return <ChangePasswordForm />;
 }
 

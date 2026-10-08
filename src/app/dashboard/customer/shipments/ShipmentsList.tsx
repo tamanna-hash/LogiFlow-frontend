@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Plus, Package, Search, Filter } from "lucide-react";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,10 +13,10 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { TableSkeleton } from "@/components/shared/Skeleton";
 import { Pagination } from "@/components/shared/Pagination";
-import { ShipmentStatusBadge, PaymentStatusBadge, DeliveryTypeBadge } from "@/components/shared/StatusBadge";
+import { ShipmentStatusBadge, PaymentStatusBadge } from "@/components/shared/StatusBadge";
 import { useShipments } from "@/features/shipments/hooks";
 import { formatDate, formatCurrency } from "@/lib/utils";
-import type { ShipmentStatus, DeliveryType } from "@/types";
+import type { ShipmentStatus } from "@/types";
 
 const STATUS_OPTIONS: { label: string; value: string }[] = [
   { label: "All statuses", value: "all" },

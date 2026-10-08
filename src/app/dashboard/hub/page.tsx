@@ -3,12 +3,13 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import {
-  Package, Truck, Warehouse, MapPin, CheckCircle, ArrowRight, Clock,
+  Package, Truck, Warehouse, MapPin, CheckCircle, ArrowRight, Clock, Hand,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StatCard } from "@/components/shared/StatCard";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { ShipmentStatusBadge } from "@/components/shared/StatusBadge";
 import { useAuthStore } from "@/lib/auth";
@@ -22,7 +23,7 @@ export default function HubOverviewPage() {
   const hubId = user?.hubManagerProfile?.hubId ?? "";
 
   const { data: hub, isError: isHubError } = useHub(hubId);
-  const { data: shipmentsData }             = useShipments({ limit: 6, sortOrder: "desc" });
+  const { data: shipmentsData, isLoading: shipmentsLoading } = useShipments({ limit: 6, sortOrder: "desc" });
   const { data: atHubData }                 = useShipments({ status: "AT_DESTINATION_HUB", limit: 1 });
   const { data: inTransitData }             = useShipments({ status: "IN_TRANSIT",          limit: 1 });
   const { data: couriersData }              = useCouriers({ limit: 1 });
@@ -39,7 +40,7 @@ export default function HubOverviewPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{greeting}, {user?.firstName} 👋</h1>
+          <h1 className="text-2xl font-bold">{greeting}, {user?.firstName} <Hand className="size-5 inline-block align-bottom ml-1" /></h1>
           <p className="text-sm text-muted-foreground mt-1">
             {hub ? `Managing ${hub.name} — ${hub.city}` : "Hub management dashboard"}
           </p>
@@ -126,38 +127,50 @@ export default function HubOverviewPage() {
           </Button>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-muted/40">
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">Tracking ID</th>
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden sm:table-cell">Recipient</th>
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Destination</th>
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Date</th>
-                  <th className="px-4 py-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {shipments.length === 0 ? (
-                  <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-muted-foreground">Loading…</td></tr>
-                ) : shipments.map((s) => (
-                  <tr key={s.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs font-semibold">{s.trackingNumber}</td>
-                    <td className="px-4 py-3 hidden sm:table-cell text-muted-foreground">{s.recipientName}</td>
-                    <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">{s.recipientCity}</td>
-                    <td className="px-4 py-3"><ShipmentStatusBadge status={s.status} /></td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground text-xs">{formatDate(s.createdAt)}</td>
-                    <td className="px-4 py-3">
-                      <Button variant="ghost" size="sm" className="text-xs h-7" asChild>
-                        <Link href={`/dashboard/hub/shipments/${s.id}`}>View</Link>
-                      </Button>
-                    </td>
+          {shipmentsLoading ? (
+            <div className="space-y-2 p-4">
+              {Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-12 animate-pulse rounded-md bg-muted" />)}
+            </div>
+          ) : shipments.length === 0 ? (
+            <div className="py-8">
+              <EmptyState
+                icon={<Package className="size-6" />}
+                title="No shipments yet"
+                description="Hub shipments will appear here."
+              />
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/40">
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Tracking ID</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden sm:table-cell">Recipient</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Destination</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Date</th>
+                    <th className="px-4 py-3" />
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {shipments.map((s) => (
+                    <tr key={s.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3 font-mono text-xs font-semibold">{s.trackingNumber}</td>
+                      <td className="px-4 py-3 hidden sm:table-cell text-muted-foreground">{s.recipientName}</td>
+                      <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">{s.recipientCity}</td>
+                      <td className="px-4 py-3"><ShipmentStatusBadge status={s.status} /></td>
+                      <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground text-xs">{formatDate(s.createdAt)}</td>
+                      <td className="px-4 py-3">
+                        <Button variant="ghost" size="sm" className="text-xs h-7" asChild>
+                          <Link href={`/dashboard/hub/shipments/${s.id}`}>View</Link>
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

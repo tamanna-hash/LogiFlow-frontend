@@ -1,42 +1,73 @@
+import Link from "next/link";
+import { Package, Phone, Mail, MapPin, ChevronRight, Globe } from "lucide-react";
 import { PublicNav } from "@/components/shared/nav/PublicNav";
+import { APP_NAME } from "@/config";
 
 function Footer() {
   return (
-    <footer className="border-t bg-muted/30 py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+    <footer className="bg-sidebar text-sidebar-foreground">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-16 pb-8">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 mb-12">
+          {/* Brand */}
           <div>
-            <h3 className="text-sm font-semibold">Platform</h3>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="/services" className="hover:text-foreground">Services</a></li>
-              <li><a href="/pricing" className="hover:text-foreground">Pricing</a></li>
-              <li><a href="/track" className="hover:text-foreground">Track shipment</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold">Company</h3>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="/about" className="hover:text-foreground">About</a></li>
-              <li><a href="/contact" className="hover:text-foreground">Contact</a></li>
-              <li><a href="/faq" className="hover:text-foreground">FAQ</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold">Account</h3>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="/login" className="hover:text-foreground">Log in</a></li>
-              <li><a href="/register" className="hover:text-foreground">Sign up</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold">LogiFlow</h3>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Bangladesh&apos;s trusted courier and logistics management platform.
+            <div className="flex items-center gap-2 font-bold text-lg mb-4">
+              <Package className="size-5 text-primary" />
+              {APP_NAME}
+            </div>
+            <p className="text-sm text-sidebar-foreground/60 leading-relaxed">
+              Bangladesh&apos;s trusted courier and logistics management platform — fast, trackable, reliable.
             </p>
+            <div className="flex gap-3 mt-6">
+              {[Phone, Mail, Globe].map((Icon, i) => (
+                <div key={i} className="flex size-9 items-center justify-center rounded-full bg-white/10 hover:bg-primary transition-colors cursor-pointer">
+                  <Icon className="size-4" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold mb-4 text-sidebar-foreground/80 uppercase tracking-wider">Platform</h4>
+            <ul className="space-y-3 text-sm">
+              {[["Services", "/services"], ["Pricing", "/pricing"], ["Track Shipment", "/track"], ["Book Now", "/register"]].map(([l, h]) => (
+                <li key={h}>
+                  <Link href={h} className="text-sidebar-foreground/60 hover:text-primary transition-colors flex items-center gap-1.5">
+                    <ChevronRight className="size-3" />{l}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold mb-4 text-sidebar-foreground/80 uppercase tracking-wider">Company</h4>
+            <ul className="space-y-3 text-sm">
+              {[["About", "/about"], ["Contact", "/contact"], ["FAQ", "/faq"]].map(([l, h]) => (
+                <li key={h}>
+                  <Link href={h} className="text-sidebar-foreground/60 hover:text-primary transition-colors flex items-center gap-1.5">
+                    <ChevronRight className="size-3" />{l}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold mb-4 text-sidebar-foreground/80 uppercase tracking-wider">Contact</h4>
+            <ul className="space-y-3 text-sm text-sidebar-foreground/60">
+              <li className="flex items-center gap-2"><Phone className="size-4 text-primary shrink-0" />+880 1700 000 000</li>
+              <li className="flex items-center gap-2"><Mail className="size-4 text-primary shrink-0" />support@logiflow.app</li>
+              <li className="flex items-center gap-2"><MapPin className="size-4 text-primary shrink-0" />Dhaka, Bangladesh</li>
+            </ul>
           </div>
         </div>
-        <div className="mt-8 border-t pt-8 text-center text-xs text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} LogiFlow. All rights reserved.</p>
+
+        <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sidebar-foreground/40">
+          <p>&copy; {new Date().getFullYear()} {APP_NAME}. All rights reserved.</p>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-sidebar-foreground transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-sidebar-foreground transition-colors">Terms of Service</a>
+          </div>
         </div>
       </div>
     </footer>

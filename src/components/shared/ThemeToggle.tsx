@@ -13,7 +13,7 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -35,7 +35,8 @@ export function ThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme, resolvedTheme } = useTheme();
   // Avoid hydration mismatch — only render the icon after mount
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setMounted(true); }, []);
 
   const current = mounted ? (theme as ThemeValue) ?? "system" : "system";
   const isDark   = mounted && resolvedTheme === "dark";
@@ -84,7 +85,7 @@ export function ThemeToggle({ className }: { className?: string }) {
             <Icon className="size-4" aria-hidden="true" />
             {label}
             {current === value && (
-              <span className="ml-auto text-xs text-primary" aria-hidden="true">✓</span>
+              <Check className="ml-auto size-4 text-primary" aria-hidden="true" />
             )}
           </DropdownMenuItem>
         ))}
