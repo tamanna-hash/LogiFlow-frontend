@@ -84,13 +84,13 @@ export async function getEarnings(params?: {
   fromDate?: string;
   toDate?: string;
 }): Promise<EarningsResponse> {
-  const resp = await apiGet<EarningsResponse["deliveries"]>(
+  const resp = await apiGet<{ deliveries: EarningsResponse["deliveries"]; totalDeliveries: number }>(
     COURIER_ENDPOINTS.earnings,
     params as Record<string, unknown>
   );
   return {
-    deliveries: resp.data,
-    totalDeliveries: (resp.data as unknown as { totalDeliveries: number }).totalDeliveries ?? 0,
+    deliveries: resp.data.deliveries ?? [],
+    totalDeliveries: resp.data.totalDeliveries ?? 0,
     meta: resp.meta!,
   };
 }

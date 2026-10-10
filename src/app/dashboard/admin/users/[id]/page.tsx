@@ -3,7 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { ArrowLeft, Shield, Trash2 } from "lucide-react";
+import { ArrowLeft, Shield, Trash2, Truck } from "lucide-react";
 import { useState, use } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,7 +16,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FormField } from "@/components/shared/FormField";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { ErrorState } from "@/components/shared/ErrorState";
-import { useUser, useUpdateUserRole, useDeleteUser } from "@/features/admin/hooks";
+import { useUser, useUpdateUserRole, useDeleteUser, useAssignCourierHub } from "@/features/admin/hooks";
+import { useHubs } from "@/features/hubs/hooks";
 import { formatDate, getInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
@@ -29,6 +30,9 @@ export default function AdminUserDetailPage({ params }: { params: Promise<{ id: 
   const { data: user, isLoading, isError, refetch } = useUser(id);
   const { mutate: updateRole, isPending: isUpdatingRole } = useUpdateUserRole();
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
+  const { mutate: assignCourierHub, isPending: isAssigningHub } = useAssignCourierHub();
+  const { data: hubsData } = useHubs({ isActive: true, limit: 100 });
+  const hubs = hubsData?.hubs ?? [];
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const form = useForm<RoleFormValues>({ resolver: zodResolver(roleSchema) });
@@ -101,6 +105,64 @@ export default function AdminUserDetailPage({ params }: { params: Promise<{ id: 
           </CardContent>
         </form>
       </Card>
+
+      {/* Courier hub assignment — shown only for COURIER role */}
+      {user.role === "COURIER" && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Truck className="size-4" />
+              Hub assignment
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Assign this courier to a hub so they appear in assignment dropdowns and can be dispatched by hub managers.
+            </p>
+            {user.courierProfile?.hubId ? (
+              <div className="flex items-center justify-between rounded-lg border p-3">
+                <div>
+                  <p className="text-sm font-medium">
+                    {hubs.find((h) => h.id === user.courierProfile?.hubId)?.name ?? "Assigned hub"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {hubs.find((h) => h.id === user.courierProfile?.hubId)?.city ?? user.courierProfile.hubId}
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-destructive hover:text-destructive"
+                  loading={isAssigningHub}
+                  onClick={() => assignCourierHub({ id, hubId: null })}
+                >
+                  Remove
+                </Button>
+              </div>
+            ) : (
+              <div className="rounded-lg border border-dashed p-3 text-sm text-muted-foreground text-center">
+                Not assigned to any hub
+              </div>
+            )}
+            <FormField label={user.courierProfile?.hubId ? "Reassign to a different hub" : "Assign to hub"} htmlFor="courierHubSelect">
+              <Select onValueChange={(hubId) => assignCourierHub({ id, hubId })}>
+                <SelectTrigger id="courierHubSelect">
+                  <SelectValue placeholder="Select a hub…" />
+                </SelectTrigger>
+                <SelectContent>
+                  {hubs
+                    .filter((h) => h.id !== user.courierProfile?.hubId)
+                    .map((h) => (
+                      <SelectItem key={h.id} value={h.id}>
+                        {h.name} — {h.city}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Delete */}
       <Card>

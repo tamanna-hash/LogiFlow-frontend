@@ -19,6 +19,7 @@ export const USER_ENDPOINTS = {
   list: "/users",
   byId: (id: string) => `/users/${id}`,
   role: (id: string) => `/users/${id}/role`,
+  courierHub: (id: string) => `/users/${id}/courier-hub`,
   delete: (id: string) => `/users/${id}`,
 } as const;
 

@@ -81,3 +81,7 @@ export async function updateUserRole(
 export async function deleteUser(id: string): Promise<void> {
   await apiDelete(USER_ENDPOINTS.delete(id));
 }
+
+export async function assignCourierHub(id: string, hubId: string | null): Promise<void> {
+  await apiPatch(USER_ENDPOINTS.courierHub(id), { hubId });
+}

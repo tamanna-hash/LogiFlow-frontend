@@ -12,6 +12,7 @@ import {
   getUserById,
   updateUserRole,
   deleteUser,
+  assignCourierHub,
 } from "./api";
 
 export function useSystemStats() {
@@ -101,6 +102,22 @@ export function useDeleteUser() {
     },
     onError: (error: ApiError) => {
       toast.error(error.message ?? "Failed to delete user");
+    },
+  });
+}
+
+export function useAssignCourierHub() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, hubId }: { id: string; hubId: string | null }) =>
+      assignCourierHub(id, hubId),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.user(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.users() });
+      toast.success("Courier hub assignment updated.");
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to assign courier to hub");
     },
   });
 }
