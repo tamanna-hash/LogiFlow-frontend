@@ -225,7 +225,7 @@ export function useAssignHubManager(hubId: string) {
 export function useRemoveHubManager(hubId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => removeHubManager(hubId),
+    mutationFn: (userId: string) => removeHubManager(hubId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.hub(hubId) });
       queryClient.invalidateQueries({ queryKey: ["hubs", "unassigned-managers"] });

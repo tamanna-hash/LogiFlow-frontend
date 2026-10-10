@@ -79,8 +79,8 @@ export async function assignHubManager(hubId: string, userId: string): Promise<H
   return resp.data;
 }
 
-export async function removeHubManager(hubId: string): Promise<void> {
-  await apiDelete(HUB_ENDPOINTS.manager(hubId));
+export async function removeHubManager(hubId: string, userId: string): Promise<void> {
+  await apiDelete(HUB_ENDPOINTS.manager(hubId), { userId });
 }
 
 export async function listUnassignedManagers(): Promise<UnassignedHubManager[]> {

@@ -3,7 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { ArrowLeft, Pencil, Trash2, UserCheck, UserX, Users } from "lucide-react";
+import { ArrowLeft, Pencil, Plus, Trash2, UserCheck, UserX, Users } from "lucide-react";
 import { use, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -45,8 +45,9 @@ export default function AdminHubDetailPage({ params }: { params: Promise<{ id: s
 
   const [showDeactivate, setShowDeactivate] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  const [showRemoveManager, setShowRemoveManager] = useState(false);
   const [showAssign, setShowAssign] = useState(false);
+  // Track which manager is being removed { userId, name }
+  const [removingManager, setRemovingManager] = useState<{ userId: string; name: string } | null>(null);
 
   const editForm = useForm<EditFormValues>({ resolver: zodResolver(editSchema) });
   const assignForm = useForm<AssignFormValues>({ resolver: zodResolver(assignSchema) });
@@ -59,7 +60,7 @@ export default function AdminHubDetailPage({ params }: { params: Promise<{ id: s
     setShowEdit(true);
   }
 
-  const currentManager = hub.hubManagerProfile?.user ?? null;
+  const managers = hub.hubManagerProfiles ?? [];
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -94,65 +95,75 @@ export default function AdminHubDetailPage({ params }: { params: Promise<{ id: s
         </CardContent>
       </Card>
 
-      {/* Hub Manager */}
+      {/* Hub Managers */}
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-base flex items-center gap-2">
                 <UserCheck className="size-4" />
-                Hub manager
+                Hub managers
+                {managers.length > 0 && (
+                  <Badge variant="secondary" className="ml-1">{managers.length}</Badge>
+                )}
               </CardTitle>
               <CardDescription className="mt-1">
-                The hub manager is responsible for overseeing operations at this hub.
+                Multiple managers can share responsibility for this hub.
               </CardDescription>
             </div>
-            {!currentManager && hub.isActive && (
+            {hub.isActive && (
               <Button size="sm" onClick={() => setShowAssign(true)}>
-                Assign manager
+                <Plus className="mr-1.5 size-3.5" />
+                Add manager
               </Button>
             )}
           </div>
         </CardHeader>
         <CardContent>
-          {currentManager ? (
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <Avatar className="size-10">
-                  <AvatarImage src={currentManager.avatarUrl ?? undefined} />
-                  <AvatarFallback>{getInitials(currentManager.firstName, currentManager.lastName)}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium text-sm">{currentManager.firstName} {currentManager.lastName}</p>
-                  <p className="text-xs text-muted-foreground">{currentManager.email}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" asChild>
-                  <Link href={`/dashboard/admin/users/${currentManager.id}`}>View profile</Link>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-destructive hover:text-destructive"
-                  onClick={() => setShowRemoveManager(true)}
+          {managers.length > 0 ? (
+            <div className="space-y-2">
+              {managers.map(({ userId, user }) => (
+                <div
+                  key={userId}
+                  className="flex items-center justify-between gap-4 rounded-lg border p-3"
                 >
-                  <UserX className="mr-1.5 size-3.5" />
-                  Remove
-                </Button>
-              </div>
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-9">
+                      <AvatarImage src={user.avatarUrl ?? undefined} />
+                      <AvatarFallback className="text-xs">{getInitials(user.firstName, user.lastName)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium text-sm leading-tight">{user.firstName} {user.lastName}</p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href={`/dashboard/admin/users/${user.id}`}>View</Link>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="size-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => setRemovingManager({ userId, name: `${user.firstName} ${user.lastName}` })}
+                    >
+                      <UserX className="size-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
-            <div className="rounded-lg border border-dashed p-4 text-center space-y-2">
+            <div className="rounded-lg border border-dashed p-5 text-center space-y-2">
               <Users className="mx-auto size-8 text-muted-foreground/50" />
-              <p className="text-sm text-muted-foreground">No hub manager assigned.</p>
+              <p className="text-sm text-muted-foreground">No managers assigned yet.</p>
               {unassignedManagers.length === 0 && (
                 <p className="text-xs text-muted-foreground">
                   No available Hub Managers found.{" "}
                   <Link href="/dashboard/admin/users" className="underline underline-offset-2 hover:text-foreground">
                     Change a user&apos;s role
                   </Link>{" "}
-                  to Hub Manager first, then assign them here.
+                  to Hub Manager first.
                 </p>
               )}
             </div>
@@ -228,8 +239,10 @@ export default function AdminHubDetailPage({ params }: { params: Promise<{ id: s
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <Card className="w-full max-w-md">
             <div className="p-6 border-b">
-              <h2 className="text-lg font-semibold">Assign hub manager</h2>
-              <p className="text-sm text-muted-foreground mt-1">Select a user with the Hub Manager role to assign to this hub.</p>
+              <h2 className="text-lg font-semibold">Add hub manager</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Select a user with the Hub Manager role. Multiple managers can be assigned.
+              </p>
             </div>
             <form onSubmit={assignForm.handleSubmit((vals) => {
               assignManager(vals.userId, { onSuccess: () => { setShowAssign(false); assignForm.reset(); } });
@@ -239,7 +252,7 @@ export default function AdminHubDetailPage({ params }: { params: Promise<{ id: s
                   <div className="rounded-lg bg-muted p-4 text-sm text-center space-y-2">
                     <p className="font-medium">No Hub Managers available</p>
                     <p className="text-muted-foreground">
-                      You need to change a user&apos;s role to <strong>Hub Manager</strong> before assigning them here.
+                      Change a user&apos;s role to <strong>Hub Manager</strong> first.
                     </p>
                     <Button variant="outline" size="sm" asChild>
                       <Link href="/dashboard/admin/users">Go to Users</Link>
@@ -268,7 +281,7 @@ export default function AdminHubDetailPage({ params }: { params: Promise<{ id: s
                   </FormField>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Only users with the Hub Manager role appear here.{" "}
+                  Only unassigned Hub Managers appear here.{" "}
                   <Link href="/dashboard/admin/users" className="underline underline-offset-2 hover:text-foreground">
                     Manage user roles →
                   </Link>
@@ -297,13 +310,16 @@ export default function AdminHubDetailPage({ params }: { params: Promise<{ id: s
 
       {/* Remove manager confirm */}
       <ConfirmDialog
-        open={showRemoveManager}
-        onOpenChange={setShowRemoveManager}
+        open={!!removingManager}
+        onOpenChange={(open) => { if (!open) setRemovingManager(null); }}
         title="Remove hub manager"
-        description={`Remove ${currentManager?.firstName} ${currentManager?.lastName} as the hub manager for ${hub.name}? They will retain the Hub Manager role but won't be assigned to any hub.`}
+        description={`Remove ${removingManager?.name} as a manager of ${hub.name}? They will retain the Hub Manager role but won't be assigned to any hub.`}
         confirmLabel="Remove"
         variant="destructive"
-        onConfirm={() => removeManager(undefined, { onSuccess: () => setShowRemoveManager(false) })}
+        onConfirm={() => {
+          if (!removingManager) return;
+          removeManager(removingManager.userId, { onSuccess: () => setRemovingManager(null) });
+        }}
         loading={isRemoving}
       />
     </div>

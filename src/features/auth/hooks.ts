@@ -29,7 +29,7 @@ export function useCurrentUser() {
       return user;
     },
     enabled: !!accessToken,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0, // always fetch fresh user data on mount — role/hub assignments change server-side
   });
 }
 

@@ -186,8 +186,8 @@ export async function apiPatch<T>(
   return resp.data;
 }
 
-export async function apiDelete<T>(url: string): Promise<ApiSuccessResponse<T>> {
-  const resp = await apiClient.delete<ApiSuccessResponse<T>>(url);
+export async function apiDelete<T>(url: string, data?: unknown): Promise<ApiSuccessResponse<T>> {
+  const resp = await apiClient.delete<ApiSuccessResponse<T>>(url, { data });
   return resp.data;
 }
 

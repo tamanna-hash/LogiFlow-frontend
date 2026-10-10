@@ -278,8 +278,8 @@ export interface Hub {
   updatedAt: string;
   zones?: Zone[];
   _count?: { shipmentsCurrently: number };
-  /** Populated by GET /hubs/:id/manager */
-  hubManagerProfile?: {
+  /** Populated by GET /hubs/:id — array of assigned hub managers */
+  hubManagerProfiles?: {
     userId: string;
     user: {
       id: string;
@@ -288,7 +288,7 @@ export interface Hub {
       email: string;
       avatarUrl?: string | null;
     };
-  } | null;
+  }[];
 }
 
 /** Shape returned by GET /hubs/unassigned-managers */

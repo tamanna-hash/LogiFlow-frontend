@@ -24,6 +24,7 @@ export interface ShipmentListParams {
   sortOrder?: "asc" | "desc";
   fromDate?: string;
   toDate?: string;
+  pickupQueue?: boolean;
 }
 
 export interface ShipmentListResponse {

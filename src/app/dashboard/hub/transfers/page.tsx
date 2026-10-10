@@ -41,7 +41,11 @@ export default function HubTransfersPage() {
         <PageHeader title="Hub Transfers" description="Manage inbound and outbound shipment transfers." />
         <Card>
           <CardContent className="py-12">
-            <EmptyState icon={<MapPin className="size-6" />} title="No hub assigned" description="Your account is not linked to a hub. Contact an administrator." />
+            <EmptyState
+              icon={<MapPin className="size-6" />}
+              title="No hub assigned"
+              description="Your account is not linked to a hub. Try signing out and back in, or contact an administrator to assign you to a hub."
+            />
           </CardContent>
         </Card>
       </div>
