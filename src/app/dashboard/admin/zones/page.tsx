@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -39,8 +40,6 @@ function ZoneDialog({ open, onOpenChange, zone }: { open: boolean; onOpenChange:
     defaultValues: zone ? { name: zone.name, code: zone.code, hubId: zone.hubId, description: zone.description ?? "" } : {},
   });
 
-  if (!open) return null;
-
   function onSubmit(vals: ZoneFormValues) {
     if (zone) {
       update({ id: zone.id, data: { name: vals.name, code: vals.code, description: vals.description } },
@@ -53,13 +52,13 @@ function ZoneDialog({ open, onOpenChange, zone }: { open: boolean; onOpenChange:
   const hubs = hubsData?.hubs ?? [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <Card className="w-full max-w-md">
-        <div className="p-6 border-b">
-          <h2 className="text-lg font-semibold">{zone ? "Edit zone" : "New delivery zone"}</h2>
-        </div>
+    <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) reset(); }}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{zone ? "Edit zone" : "New delivery zone"}</DialogTitle>
+        </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="p-6 space-y-4">
+          <div className="space-y-4 py-2">
             <FormField label="Zone name" htmlFor="zoneName" error={errors.name?.message} required>
               <Input id="zoneName" {...register("name")} placeholder="Dhaka North" />
             </FormField>
@@ -71,7 +70,7 @@ function ZoneDialog({ open, onOpenChange, zone }: { open: boolean; onOpenChange:
                 <Controller control={control} name="hubId" render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger id="hubId"><SelectValue placeholder="Select hub" /></SelectTrigger>
-                    <SelectContent>
+                    <SelectContent side="bottom" avoidCollisions={false} className="max-h-50 overflow-y-auto">
                       {hubs.map(h => <SelectItem key={h.id} value={h.id}>{h.name} — {h.city}</SelectItem>)}
                     </SelectContent>
                   </Select>
@@ -82,13 +81,13 @@ function ZoneDialog({ open, onOpenChange, zone }: { open: boolean; onOpenChange:
               <Input id="zoneDesc" {...register("description")} placeholder="Covers Uttara, Mirpur…" />
             </FormField>
           </div>
-          <div className="p-6 border-t flex justify-end gap-2">
+          <DialogFooter className="mt-4">
             <Button type="button" variant="outline" onClick={() => { onOpenChange(false); reset(); }}>Cancel</Button>
             <Button type="submit" loading={isCreating || isUpdating}>{zone ? "Save" : "Create zone"}</Button>
-          </div>
+          </DialogFooter>
         </form>
-      </Card>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

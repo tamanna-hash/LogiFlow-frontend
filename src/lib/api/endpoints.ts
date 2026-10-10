@@ -52,6 +52,11 @@ export const HUB_ENDPOINTS = {
   transfer: (hubId: string) => `/hubs/${hubId}/transfers`,
   confirmArrival: (hubId: string, transferId: string) =>
     `/hubs/${hubId}/transfers/${transferId}/arrive`,
+  // Hub Manager assignment
+  manager: (hubId: string) => `/hubs/${hubId}/manager`,
+  unassignedManagers: "/hubs/unassigned-managers",
+  // Hub couriers (admin view)
+  hubCouriers: (hubId: string) => `/hubs/${hubId}/couriers`,
 } as const;
 
 export const ZONE_ENDPOINTS = {

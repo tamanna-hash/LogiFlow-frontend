@@ -275,6 +275,27 @@ export interface Hub {
   updatedAt: string;
   zones?: Zone[];
   _count?: { shipmentsCurrently: number };
+  /** Populated by GET /hubs/:id/manager */
+  hubManagerProfile?: {
+    userId: string;
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      avatarUrl?: string | null;
+    };
+  } | null;
+}
+
+/** Shape returned by GET /hubs/unassigned-managers */
+export interface UnassignedHubManager {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatarUrl?: string | null;
+  hubManagerProfile: { hubId: string | null } | null;
 }
 
 export interface Zone {
