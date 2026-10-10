@@ -191,6 +191,14 @@ export async function apiDelete<T>(url: string): Promise<ApiSuccessResponse<T>> 
   return resp.data;
 }
 
+export async function apiPut<T>(
+  url: string,
+  data?: unknown,
+): Promise<ApiSuccessResponse<T>> {
+  const resp = await apiClient.put<ApiSuccessResponse<T>>(url, data);
+  return resp.data;
+}
+
 export async function apiPostFormData<T>(
   url: string,
   formData: FormData,

@@ -1,6 +1,6 @@
-import { apiGet, apiPost, apiPatch, apiDelete } from "@/lib/api/client";
+import { apiGet, apiPost, apiPatch, apiDelete, apiPut } from "@/lib/api/client";
 import { HUB_ENDPOINTS } from "@/lib/api/endpoints";
-import type { Hub, PaginationMeta } from "@/types";
+import type { Hub, UnassignedHubManager, PaginationMeta } from "@/types";
 
 export interface HubListResponse {
   hubs: Hub[];
@@ -65,6 +65,27 @@ export async function confirmArrival(
   transferId: string
 ): Promise<void> {
   await apiPatch(HUB_ENDPOINTS.confirmArrival(hubId, transferId));
+}
+
+// ── Hub Manager Assignment ────────────────────────────────────────────────────
+
+export async function getHubManager(hubId: string): Promise<Hub> {
+  const resp = await apiGet<Hub>(HUB_ENDPOINTS.manager(hubId));
+  return resp.data;
+}
+
+export async function assignHubManager(hubId: string, userId: string): Promise<Hub> {
+  const resp = await apiPut<Hub>(HUB_ENDPOINTS.manager(hubId), { userId });
+  return resp.data;
+}
+
+export async function removeHubManager(hubId: string): Promise<void> {
+  await apiDelete(HUB_ENDPOINTS.manager(hubId));
+}
+
+export async function listUnassignedManagers(): Promise<UnassignedHubManager[]> {
+  const resp = await apiGet<UnassignedHubManager[]>(HUB_ENDPOINTS.unassignedManagers);
+  return resp.data;
 }
 
 // ── Zone management ───────────────────────────────────────────────────────────

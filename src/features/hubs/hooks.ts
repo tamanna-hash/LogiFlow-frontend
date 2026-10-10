@@ -190,3 +190,49 @@ export function useDeleteZone() {
     },
   });
 }
+
+// ── Hub Manager Assignment hooks ──────────────────────────────────────────────
+import {
+  listUnassignedManagers,
+  assignHubManager,
+  removeHubManager,
+} from "./api";
+import type { UnassignedHubManager } from "@/types";
+
+export function useUnassignedManagers() {
+  return useQuery({
+    queryKey: ["hubs", "unassigned-managers"],
+    queryFn: listUnassignedManagers,
+    staleTime: 30 * 1000,
+  });
+}
+
+export function useAssignHubManager(hubId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (userId: string) => assignHubManager(hubId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.hub(hubId) });
+      queryClient.invalidateQueries({ queryKey: ["hubs", "unassigned-managers"] });
+      toast.success("Hub manager assigned.");
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to assign hub manager");
+    },
+  });
+}
+
+export function useRemoveHubManager(hubId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => removeHubManager(hubId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.hub(hubId) });
+      queryClient.invalidateQueries({ queryKey: ["hubs", "unassigned-managers"] });
+      toast.success("Hub manager removed.");
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to remove hub manager");
+    },
+  });
+}
