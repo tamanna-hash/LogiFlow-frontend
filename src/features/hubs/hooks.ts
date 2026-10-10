@@ -12,6 +12,7 @@ import {
   deactivateHub,
   createTransfer,
   confirmArrival,
+  listHubDestinations,
 } from "./api";
 
 export function useHubs(params?: {
@@ -24,6 +25,14 @@ export function useHubs(params?: {
     queryKey: queryKeys.hubs(params as Record<string, unknown>),
     queryFn: () => listHubs(params),
     staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useHubDestinations() {
+  return useQuery({
+    queryKey: ["hubs", "destinations"],
+    queryFn: listHubDestinations,
+    staleTime: 10 * 60 * 1000,
   });
 }
 

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Package, Truck } from "lucide-react";
+import { Package, Truck, PackageCheck } from "lucide-react";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,9 +16,10 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { TableSkeleton } from "@/components/shared/Skeleton";
 import { FormField } from "@/components/shared/FormField";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { ShipmentStatusBadge } from "@/components/shared/StatusBadge";
 import { useShipments } from "@/features/shipments/hooks";
-import { useCouriers, useCreateAssignment } from "@/features/couriers/hooks";
+import { useCouriers, useCreateAssignment, useUpdateOperationsShipmentStatus } from "@/features/couriers/hooks";
 import { formatDate } from "@/lib/utils";
 
 const assignSchema = z.object({
@@ -74,12 +75,15 @@ function AssignCourierForm({ shipmentId, onClose }: { shipmentId: string; onClos
 export default function HubShipmentsPage() {
   const [tab, setTab] = useState<"at_hub" | "pickup_queue">("at_hub");
   const [assigningId, setAssigningId] = useState<string | null>(null);
+  const [receivingId, setReceivingId] = useState<string | null>(null);
 
   const { data: atHubData, isLoading: atHubLoading, isError: atHubError, refetch: refetchAtHub } =
     useShipments({ page: 1, limit: 50 });
 
   const { data: queueData, isLoading: queueLoading, isError: queueError, refetch: refetchQueue } =
     useShipments({ page: 1, limit: 50, pickupQueue: true });
+
+  const { mutate: updateStatus, isPending: isReceiving } = useUpdateOperationsShipmentStatus();
 
   const atHubShipments = atHubData?.shipments ?? [];
   const queueShipments = queueData?.shipments ?? [];
@@ -199,10 +203,16 @@ export default function HubShipmentsPage() {
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <ShipmentStatusBadge status={s.status} />
-                      {assigningId !== s.id && (
+                      {s.status === "PICKUP_REQUESTED" && assigningId !== s.id && (
                         <Button size="sm" onClick={() => setAssigningId(s.id)}>
                           <Truck className="mr-1.5 size-3.5" />
                           Assign courier
+                        </Button>
+                      )}
+                      {s.status === "PICKED_UP" && (
+                        <Button size="sm" onClick={() => setReceivingId(s.id)}>
+                          <PackageCheck className="mr-1.5 size-3.5" />
+                          Mark as received
                         </Button>
                       )}
                     </div>
@@ -218,6 +228,23 @@ export default function HubShipmentsPage() {
           )}
         </div>
       )}
+
+      {/* Confirm mark as received */}
+      <ConfirmDialog
+        open={!!receivingId}
+        onOpenChange={(open) => { if (!open) setReceivingId(null); }}
+        title="Mark as received at hub"
+        description="Confirm that this shipment has physically arrived at your hub. The status will update to At Hub."
+        confirmLabel="Mark as received"
+        onConfirm={() => {
+          if (!receivingId) return;
+          updateStatus(
+            { id: receivingId, data: { status: "AT_ORIGIN_HUB" } },
+            { onSuccess: () => { setReceivingId(null); refetchQueue(); refetchAtHub(); } }
+          );
+        }}
+        loading={isReceiving}
+      />
     </div>
   );
 }

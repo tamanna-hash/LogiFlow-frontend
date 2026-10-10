@@ -20,6 +20,11 @@ export async function listHubs(params?: {
   return { hubs: resp.data, meta: resp.meta! };
 }
 
+export async function listHubDestinations(): Promise<{ id: string; name: string; city: string }[]> {
+  const resp = await apiGet<{ id: string; name: string; city: string }[]>(HUB_ENDPOINTS.destinations);
+  return resp.data;
+}
+
 export async function getHub(id: string): Promise<Hub> {
   const resp = await apiGet<Hub>(HUB_ENDPOINTS.byId(id));
   return resp.data;

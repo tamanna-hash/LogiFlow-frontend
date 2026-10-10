@@ -47,6 +47,7 @@ export const PRICING_ENDPOINTS = {
 export const HUB_ENDPOINTS = {
   create: "/hubs",
   list: "/hubs",
+  destinations: "/hubs/destinations",
   byId: (id: string) => `/hubs/${id}`,
   update: (id: string) => `/hubs/${id}`,
   deactivate: (id: string) => `/hubs/${id}`,
