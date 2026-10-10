@@ -60,7 +60,7 @@ export async function changePassword(data: {
 }
 
 export async function setPassword(data: { newPassword: string }): Promise<void> {
-  await apiPatch<void>(AUTH_ENDPOINTS.setPassword, data);
+  await apiPost<void>(AUTH_ENDPOINTS.setPassword, data);
 }
 
 export async function getCurrentUser(): Promise<AuthUser> {

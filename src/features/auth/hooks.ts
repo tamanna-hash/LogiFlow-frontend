@@ -127,9 +127,22 @@ export function useChangePassword() {
 // ── Set password (Google-only users) ─────────────────────────────────────────
 
 export function useSetPassword() {
+  const queryClient = useQueryClient();
+  const { setUser } = useAuthStore();
+
   return useMutation({
     mutationFn: setPassword,
-    onSuccess: () => {
+    onSuccess: async () => {
+      // Re-fetch /users/me so hasPassword flips to true in the store and
+      // the UI switches from SetPasswordForm to ChangePasswordForm.
+      try {
+        const user = await getCurrentUser();
+        setUser(user);
+        queryClient.setQueryData(queryKeys.currentUser, user);
+      } catch {
+        // Non-critical: invalidate so the next render re-fetches
+        queryClient.invalidateQueries({ queryKey: queryKeys.currentUser });
+      }
       toast.success("Password set. You can now sign in with email and password.");
     },
     onError: (error: ApiError) => {

@@ -109,6 +109,9 @@ export interface AuthUser {
   avatarUrl?: string | null;
   isEmailVerified: boolean;
   isActive: boolean;
+  /** True when the account has a local password set. False for Google-only accounts.
+   * May be undefined for sessions persisted before this field was added. */
+  hasPassword?: boolean;
   createdAt: string;
   updatedAt: string;
   customerProfile?: {
@@ -305,7 +308,7 @@ export interface Zone {
   hubId: string;
   description?: string | null;
   isActive: boolean;
-  hub?: { name: string };
+  hub?: { name: string; city: string };
 }
 
 // ── Courier types ─────────────────────────────────────────────────────────────

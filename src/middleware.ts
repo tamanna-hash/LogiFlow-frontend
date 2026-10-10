@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Routes that require authentication
-const PROTECTED_PREFIXES = ["/dashboard", "/payment"];
+const PROTECTED_PREFIXES = ["/dashboard"];
+
+// Routes under /payment that are public (Stripe redirects here without a session)
+const PUBLIC_PAYMENT_ROUTES = ["/payment/success", "/payment/failure"];
 
 // Routes that must NOT be accessible when authenticated
 const AUTH_ONLY_ROUTES = ["/login", "/register", "/verify-email"];
@@ -46,9 +49,9 @@ export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get("logiflow_token")?.value;
   const role = request.cookies.get("logiflow_role")?.value;
 
-  const isProtected = PROTECTED_PREFIXES.some((p) =>
-    pathname.startsWith(p)
-  );
+  const isProtected =
+    PROTECTED_PREFIXES.some((p) => pathname.startsWith(p)) ||
+    (pathname.startsWith("/payment") && !PUBLIC_PAYMENT_ROUTES.some((p) => pathname.startsWith(p)));
   const isAuthOnly = AUTH_ONLY_ROUTES.some((r) => pathname.startsWith(r));
 
   // Redirect unauthenticated users away from protected pages

@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight, Plus, Trash2, Package, Check, Calculator } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,6 +34,9 @@ export function CreateShipmentWizard() {
   const { mutate: calcPrice, isPending: isCalcPending } = useCalculatePrice();
   const { data: zonesData } = useZones({ isActive: true, limit: 100 });
   const zones = zonesData?.zones ?? [];
+  const cities = Array.from(
+    new Set(zones.map((z) => z.hub?.city).filter((c): c is string => Boolean(c)))
+  ).sort();
 
   // Use unknown to bridge the resolver type mismatch caused by Zod's .default() types
   const form = useForm<CreateShipmentFormValues>({
@@ -56,6 +59,20 @@ export function CreateShipmentWizard() {
   } = form;
 
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
+
+  // Watch items array to auto-calculate total weight
+  const watchedItems = useWatch({ control, name: "items" });
+  useEffect(() => {
+    const total = (watchedItems ?? []).reduce((sum, item) => {
+      const weight = Number(item?.weightKg) || 0;
+      const qty = Number(item?.quantity) || 1;
+      return sum + weight * qty;
+    }, 0);
+    const rounded = Math.round(total * 100) / 100;
+    form.setValue("declaredWeightKg", rounded > 0 ? rounded : 0.1, {
+      shouldValidate: true,
+    });
+  }, [watchedItems, form]);
 
   async function goNext() {
     const fieldsToValidate: string[] = ({
@@ -157,7 +174,22 @@ export function CreateShipmentWizard() {
                   <Input id="senderPhone" type="tel" placeholder="01700000000" {...register("senderPhone")} />
                 </FormField>
                 <FormField label="City" htmlFor="senderCity" error={errors.senderCity?.message} required>
-                  <Input id="senderCity" placeholder="Dhaka" {...register("senderCity")} />
+                  <Controller
+                    control={control}
+                    name="senderCity"
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger id="senderCity">
+                          <SelectValue placeholder="Select city" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {cities.map((city) => (
+                            <SelectItem key={city} value={city}>{city}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </FormField>
               </div>
               <FormField label="Address" htmlFor="senderAddress" error={errors.senderAddress?.message} required>
@@ -201,7 +233,22 @@ export function CreateShipmentWizard() {
                   <Input id="recipientPhone" type="tel" placeholder="01700000000" {...register("recipientPhone")} />
                 </FormField>
                 <FormField label="City" htmlFor="recipientCity" error={errors.recipientCity?.message} required>
-                  <Input id="recipientCity" placeholder="Chittagong" {...register("recipientCity")} />
+                  <Controller
+                    control={control}
+                    name="recipientCity"
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger id="recipientCity">
+                          <SelectValue placeholder="Select city" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {cities.map((city) => (
+                            <SelectItem key={city} value={city}>{city}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </FormField>
               </div>
               <FormField label="Address" htmlFor="recipientAddress" error={errors.recipientAddress?.message} required>
@@ -238,12 +285,20 @@ export function CreateShipmentWizard() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="Total weight (kg)" htmlFor="declaredWeightKg" error={errors.declaredWeightKg?.message} required>
+                <FormField
+                  label="Total weight (kg)"
+                  htmlFor="declaredWeightKg"
+                  error={errors.declaredWeightKg?.message}
+                  required
+                  hint="Auto-calculated from items below"
+                >
                   <Input
                     id="declaredWeightKg"
                     type="number"
                     step="0.1"
                     min="0.1"
+                    readOnly
+                    className="bg-muted cursor-not-allowed"
                     {...register("declaredWeightKg", { valueAsNumber: true })}
                   />
                 </FormField>

@@ -22,6 +22,16 @@ export async function initiateStripeCheckout(
   return resp.data;
 }
 
+export async function verifyStripePayment(
+  shipmentId: string
+): Promise<{ status: string; alreadyCompleted: boolean }> {
+  const resp = await apiPost<{ status: string; alreadyCompleted: boolean }>(
+    PAYMENT_ENDPOINTS.stripeVerify(shipmentId),
+    {}
+  );
+  return resp.data;
+}
+
 export async function getPaymentByShipment(shipmentId: string): Promise<Payment> {
   const resp = await apiGet<Payment>(PAYMENT_ENDPOINTS.byShipment(shipmentId));
   return resp.data;

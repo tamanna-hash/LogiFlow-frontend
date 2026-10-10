@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryKeys } from "@/lib/api/query-client";
 import type { ApiError } from "@/lib/api/client";
-import { initiateBkashPayment, initiateStripeCheckout, getPaymentByShipment, listPayments } from "./api";
+import { initiateBkashPayment, initiateStripeCheckout, verifyStripePayment, getPaymentByShipment, listPayments } from "./api";
 
 export function usePaymentByShipment(shipmentId: string, enabled = true) {
   return useQuery({
@@ -26,6 +26,15 @@ export function usePayments(params?: {
   return useQuery({
     queryKey: queryKeys.payments(params as Record<string, unknown>),
     queryFn: () => listPayments(params),
+  });
+}
+
+export function useVerifyStripePayment() {
+  return useMutation({
+    mutationFn: verifyStripePayment,
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to verify payment");
+    },
   });
 }
 

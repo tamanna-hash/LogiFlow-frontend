@@ -93,6 +93,7 @@ export const PAYMENT_ENDPOINTS = {
   initiateBkash: "/payments/bkash/initiate",
   bkashCallback: "/payments/bkash/callback",
   stripeCheckout: "/payments/stripe/checkout",
+  stripeVerify: (shipmentId: string) => `/payments/stripe/verify/${shipmentId}`,
   byShipment: (shipmentId: string) => `/payments/shipment/${shipmentId}`,
   list: "/payments",
 } as const;

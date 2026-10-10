@@ -7,7 +7,7 @@ import { CheckCircle, XCircle, Clock, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PaymentStatusBadge } from "@/components/shared/StatusBadge";
-import { usePaymentByShipment } from "@/features/payments/hooks";
+import { usePaymentByShipment, useVerifyStripePayment } from "@/features/payments/hooks";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { PAYMENT_POLL_INTERVAL_MS, PAYMENT_POLL_MAX_ATTEMPTS } from "@/config";
 
@@ -21,7 +21,19 @@ export function PaymentResult() {
     !!shipmentId
   );
 
-  // Poll while payment is pending
+  const { mutate: verifyStripe, isPending: isVerifying } = useVerifyStripePayment();
+
+  // On mount, immediately ask the backend to check Stripe directly
+  // (handles the case where the webhook hasn't fired yet)
+  useEffect(() => {
+    if (!shipmentId) return;
+    verifyStripe(shipmentId, {
+      onSettled: () => refetch(),
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shipmentId]);
+
+  // Poll while payment is still pending
   useEffect(() => {
     if (!shipmentId) return;
     if (payment?.status === "COMPLETED" || payment?.status === "FAILED") return;
@@ -32,11 +44,12 @@ export function PaymentResult() {
         clearInterval(interval);
         return;
       }
-      refetch();
+      // Try verify first, then refetch status
+      verifyStripe(shipmentId, { onSettled: () => refetch() });
     }, PAYMENT_POLL_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [shipmentId, payment?.status, refetch]);
+  }, [shipmentId, payment?.status, refetch, verifyStripe]);
 
   if (!shipmentId) {
     return (
@@ -154,6 +167,16 @@ export function PaymentResult() {
           )}
 
           <div className="flex flex-col gap-2">
+            {isPending && (
+              <Button
+                variant="outline"
+                loading={isVerifying}
+                onClick={() => verifyStripe(shipmentId, { onSettled: () => refetch() })}
+              >
+                <RefreshCw className="mr-2 size-4" />
+                Check payment status
+              </Button>
+            )}
             {isFailed && (
               <Button asChild>
                 <Link href={`/dashboard/customer/shipments/${shipmentId}`}>
