@@ -7,26 +7,43 @@ interface StaggerContainerProps {
   children: ReactNode;
   staggerDelay?: number;
   className?: string;
+  /** If true, animates once on page load instead of on scroll */
+  immediate?: boolean;
 }
 
-export function StaggerContainer({ 
-  children, 
+export function StaggerContainer({
+  children,
   staggerDelay = 0.1,
-  className 
+  className,
+  immediate = false,
 }: StaggerContainerProps) {
+  const variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: staggerDelay },
+    },
+  };
+
+  if (immediate) {
+    return (
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={variants}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial="hidden"
-      animate="visible"
-      variants={{
-        hidden: { opacity: 0 },
-        visible: {
-          opacity: 1,
-          transition: {
-            staggerChildren: staggerDelay,
-          },
-        },
-      }}
+      whileInView="visible"
+      viewport={{ once: true, margin: "-60px" }}
+      variants={variants}
       className={className}
     >
       {children}
@@ -40,15 +57,19 @@ interface StaggerItemProps {
   distance?: number;
 }
 
-export function StaggerItem({ children, className, distance = 20 }: StaggerItemProps) {
+export function StaggerItem({
+  children,
+  className,
+  distance = 24,
+}: StaggerItemProps) {
   return (
     <motion.div
       variants={{
         hidden: { opacity: 0, y: distance },
-        visible: { 
-          opacity: 1, 
+        visible: {
+          opacity: 1,
           y: 0,
-          transition: { duration: 0.5, ease: "easeOut" }
+          transition: { duration: 0.5, ease: "easeOut" },
         },
       }}
       className={className}
