@@ -12,6 +12,8 @@ export const AUTH_ENDPOINTS = {
   changePassword: "/auth/change-password",
   setPassword:    "/auth/set-password",
   googleAuth:     "/auth/google",
+  forgotPassword: "/auth/forgot-password",
+  resetPassword:  "/auth/reset-password",
 } as const;
 
 export const USER_ENDPOINTS = {

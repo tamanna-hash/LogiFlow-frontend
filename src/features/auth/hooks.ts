@@ -13,6 +13,8 @@ import {
   changePassword,
   setPassword,
   getCurrentUser,
+  forgotPassword,
+  resetPassword,
 } from "./api";
 import { getRoleDashboardPath } from "@/lib/auth";
 import type { ApiError } from "@/lib/api/client";
@@ -147,6 +149,34 @@ export function useSetPassword() {
     },
     onError: (error: ApiError) => {
       toast.error(error.message ?? "Failed to set password");
+    },
+  });
+}
+
+// ── Forgot password ───────────────────────────────────────────────────────────
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: forgotPassword,
+    onSuccess: () => {
+      toast.success("If an account exists, a password reset link has been sent to your email.");
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to send reset link");
+    },
+  });
+}
+
+// ── Reset password ────────────────────────────────────────────────────────────
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: resetPassword,
+    onSuccess: () => {
+      toast.success("Password reset successfully!");
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message ?? "Failed to reset password. The link may have expired.");
     },
   });
 }

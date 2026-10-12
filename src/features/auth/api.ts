@@ -67,3 +67,14 @@ export async function getCurrentUser(): Promise<AuthUser> {
   const resp = await apiGet<AuthUser>(USER_ENDPOINTS.me);
   return resp.data;
 }
+
+export async function forgotPassword(data: { email: string }): Promise<void> {
+  await apiPost<void>(AUTH_ENDPOINTS.forgotPassword, data);
+}
+
+export async function resetPassword(data: {
+  token: string;
+  newPassword: string;
+}): Promise<void> {
+  await apiPost<void>(AUTH_ENDPOINTS.resetPassword, data);
+}

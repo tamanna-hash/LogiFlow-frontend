@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="32" fill="#2563eb"/>
+  
+  <!-- Package box icon -->
+  <path d="M32 16L44 22V38L32 44L20 38V22L32 16Z" fill="white" opacity="0.9"/>
+  <path d="M32 16V28M32 28L20 22M32 28L44 22M32 28V44" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Arrow (logistics flow) -->
+  <path d="M48 32L54 32M54 32L51 29M54 32L51 35" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

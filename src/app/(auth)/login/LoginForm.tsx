@@ -136,6 +136,14 @@ export function LoginForm() {
                   )}
                 </button>
               </div>
+              <div className="flex justify-end mt-1">
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-muted-foreground hover:text-primary"
+                >
+                  Forgot password?
+                </Link>
+              </div>
             </FormField>
           </CardContent>
 
@@ -158,9 +166,7 @@ export function LoginForm() {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium">Demo accounts</CardTitle>
           <CardDescription className="text-xs">
-            Click to pre-fill credentials. Run{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">npm run db:seed</code>{" "}
-            on the backend first.
+            Click to pre-fill demo credentials for testing.
           </CardDescription>
         </CardHeader>
         <CardContent>
