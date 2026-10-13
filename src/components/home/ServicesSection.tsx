@@ -3,6 +3,8 @@ import { Package, Zap, Clock, Globe, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SectionReveal, StaggerReveal, StaggerChild } from "@/components/home/SectionReveal";
 
+const SITE_URL = "https://logiflow-hash.vercel.app";
+
 const SERVICES = [
   {
     icon: <Package className="size-6" />,
@@ -57,7 +59,7 @@ export function ServicesSection() {
           {SERVICES.map((s) => (
             <StaggerChild key={s.label}>
               <Link
-                href={s.href}
+                href={`${SITE_URL}${s.href}`}
                 className="group relative overflow-hidden rounded-2xl border bg-card p-6 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full"
               >
                 <div className={`inline-flex size-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white mb-5 shadow-lg`}>
@@ -78,7 +80,7 @@ export function ServicesSection() {
         </StaggerReveal>
 
         <SectionReveal className="text-center mt-10">
-          <Link href="/services" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+          <Link href={`${SITE_URL}/services`} className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
             View all services <ArrowRight className="size-4" />
           </Link>
         </SectionReveal>

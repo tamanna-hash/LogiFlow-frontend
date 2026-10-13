@@ -2,6 +2,8 @@
 
 **LogiFlow** is Bangladesh's intelligent courier and logistics management platform — built to handle the complete parcel delivery lifecycle from booking to doorstep delivery.
 
+<img src="https://i.ibb.co.com/b5QhwLmN/logiflow.png" height="300px" width="400px">
+
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind-4-38bdf8?logo=tailwindcss)
