@@ -45,8 +45,7 @@ export function DashboardSidebar({ isOpen, onClose }: DashboardSidebarProps) {
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r sidebar-surface transition-transform duration-300 ease-in-out",
-          "lg:relative lg:translate-x-0 lg:z-auto",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
         aria-label="Sidebar navigation"
       >

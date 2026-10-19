@@ -52,7 +52,8 @@ export default function DashboardLayout({
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
         />
-        <div className="flex flex-1 flex-col lg:pl-0">
+        {/* Offset content so it clears the fixed sidebar on desktop */}
+        <div className="flex flex-1 flex-col min-w-0 lg:pl-64">
           <DashboardHeader onMenuToggle={() => setSidebarOpen(true)} />
           <main
             id="main-content"
