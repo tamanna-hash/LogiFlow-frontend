@@ -33,7 +33,7 @@ export function CourierOverview() {
 
   // Rough earnings estimate from recent deliveries
   const totalEarnings = (earningsData?.deliveries ?? [])
-    .reduce((sum, d) => sum + (d.shipment?.price ?? 0), 0);
+    .reduce((sum, d) => sum + parseFloat(String(d.shipment?.price ?? 0)), 0);
 
   return (
     <div className="space-y-6">

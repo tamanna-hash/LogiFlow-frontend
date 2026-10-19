@@ -11,7 +11,7 @@ export function cn(...inputs: ClassValue[]) {
 export function formatCurrency(amount: number | string, currency = "BDT") {
   const num = typeof amount === "string" ? parseFloat(amount) : amount;
   if (isNaN(num)) return `${currency} 0.00`;
-  return `${currency} ${num.toFixed(2)}`;
+  return `${currency} ${num.toLocaleString("en-BD", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 export function formatDate(dateStr: string | null | undefined): string {

@@ -23,9 +23,9 @@ export function StatCard({ title, value, subtitle, icon, iconBg = "bg-primary", 
       <div className={cn("flex size-11 shrink-0 items-center justify-center rounded-xl text-white", iconBg)}>
         {icon}
       </div>
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 overflow-hidden">
         <p className="text-xs text-muted-foreground font-medium truncate">{title}</p>
-        <p className="text-2xl font-bold leading-tight mt-0.5">{value}</p>
+        <p className="text-xl font-bold leading-tight mt-0.5 break-words">{value}</p>
         {trend && (
           <p className={cn("flex items-center gap-1 text-xs font-medium mt-1",
             trend.up ? "text-emerald-500" : "text-red-500")}>
@@ -34,7 +34,7 @@ export function StatCard({ title, value, subtitle, icon, iconBg = "bg-primary", 
           </p>
         )}
         {subtitle && !trend && (
-          <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+          <p className="text-xs text-muted-foreground mt-1 truncate">{subtitle}</p>
         )}
       </div>
     </div>
