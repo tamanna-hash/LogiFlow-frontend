@@ -409,3 +409,133 @@ export interface PricingRule {
   isActive: boolean;
   createdAt: string;
 }
+
+// ── Risk Assessment types (mirrored from backend Day-1/Day-2) ─────────────────
+
+export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
+export type RiskAssessmentStatus = "ASSESSED" | "INSUFFICIENT_DATA";
+export type RiskFactorCode =
+  | "STATUS_INACTIVE_WARNING"
+  | "STATUS_INACTIVE_CRITICAL"
+  | "FAILED_DELIVERY_ATTEMPT_1"
+  | "FAILED_DELIVERY_ATTEMPT_2"
+  | "FAILED_DELIVERY_ATTEMPT_MAX"
+  | "COURIER_NOT_ACCEPTED"
+  | "MULTIPLE_HUB_TRANSFERS";
+
+export interface RiskFactor {
+  code: RiskFactorCode;
+  score: number;
+  evidence: string;
+}
+
+/** A persisted ShipmentRiskAssessment row (with tracking number joined). */
+export interface RiskAssessment {
+  id: string;
+  shipmentId: string;
+  riskScore: number;
+  riskLevel: RiskLevel;
+  assessmentStatus: RiskAssessmentStatus;
+  /** JSON array of RiskFactor objects */
+  factors: RiskFactor[];
+  shipmentStatus: ShipmentStatus;
+  lastEventAt: string | null;
+  assessedAt: string;
+  shipment: { trackingNumber: string };
+}
+
+/** Aggregate overview returned by GET /risk/overview */
+export interface RiskOverview {
+  total: number;
+  assessed: number;
+  unassessed: number;
+  high: number;
+  medium: number;
+  low: number;
+  requiresAttention: number;
+}
+
+// ── AI Investigation types (Day 3) ────────────────────────────────────────────
+
+export type InvestigationSeverity = "INFO" | "WARNING" | "CRITICAL";
+export type InvestigationActionPriority = "HIGH" | "MEDIUM" | "LOW";
+
+export interface InvestigationEvidenceItem {
+  fact: string;
+  source: string;
+}
+
+export interface InvestigationFinding {
+  title: string;
+  detail: string;
+  severity: InvestigationSeverity;
+  evidence: InvestigationEvidenceItem[];
+}
+
+export interface InvestigationTrackingEvent {
+  timestamp: string;
+  status: string;
+  description: string;
+  significance: string;
+}
+
+export interface InvestigationRecommendedAction {
+  action: string;
+  priority: InvestigationActionPriority;
+  rationale: string;
+}
+
+export interface InvestigationReport {
+  // AI-generated fields
+  answer: string;
+  overallAssessment: string;
+  officialRiskScore: number;
+  officialRiskLevel: RiskLevel;
+  findings: InvestigationFinding[];
+  relevantTrackingEvents: InvestigationTrackingEvent[];
+  recommendedActions: InvestigationRecommendedAction[];
+  dataLimitations: string;
+  // Metadata attached by the backend service
+  shipmentId: string;
+  trackingNumber: string;
+  investigatedAt: string;
+}
+
+// ── Route Optimization types (Day 4) ──────────────────────────────────────────
+
+export interface RouteSegment {
+  from: string;
+  to: string;
+  fromLabel: string;
+  toLabel: string;
+  cost: number;
+}
+
+export interface OptimizedRoute {
+  fromHubId: string;
+  toHubId: string;
+  fromHubName: string;
+  toHubName: string;
+  path: string[];
+  pathLabels: string[];
+  totalCost: number;
+  segments: RouteSegment[];
+  found: boolean;
+  algorithm: string;
+  optimizedAt: string;
+  costUnit: string;
+  shipmentId?: string;
+  trackingNumber?: string;
+}
+
+export interface HubRoute {
+  id: string;
+  fromHubId: string;
+  toHubId: string;
+  cost: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  fromHub: { name: string; code: string };
+  toHub: { name: string; code: string };
+}

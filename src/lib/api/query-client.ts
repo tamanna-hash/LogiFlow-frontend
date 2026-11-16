@@ -68,6 +68,26 @@ export const queryKeys = {
   notifications: (params?: Record<string, unknown>) =>
     params ? ["notifications", params] : ["notifications"],
 
+  // Risk
+  riskOverview: () => ["risk", "overview"] as const,
+  riskAssessments: (params?: Record<string, unknown>) =>
+    params ? ["risk", "assessments", params] : ["risk", "assessments"],
+  riskLatest: (shipmentId: string) => ["risk", "latest", shipmentId] as const,
+  riskHistory: (shipmentId: string, params?: Record<string, unknown>) =>
+    params ? ["risk", "history", shipmentId, params] : ["risk", "history", shipmentId],
+
+  // AI Investigation
+  investigation: (shipmentId: string, question: string) =>
+    ["ai", "investigation", shipmentId, question] as const,
+
+  // Route optimization
+  optimizedRoute: (fromHubId: string, toHubId: string) =>
+    ["routes", "optimize", fromHubId, toHubId] as const,
+  optimizedShipmentRoute: (shipmentId: string) =>
+    ["routes", "shipment", shipmentId] as const,
+  routes: (params?: Record<string, unknown>) =>
+    params ? ["routes", params] : ["routes"],
+
   // Admin
   adminStats: () => ["admin", "stats"] as const,
   auditLogs: (params?: Record<string, unknown>) =>

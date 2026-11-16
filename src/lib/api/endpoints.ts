@@ -113,3 +113,22 @@ export const ADMIN_ENDPOINTS = {
   auditLogs: "/admin/audit-logs",
   operationalLogs: "/admin/audit-logs/operational",
 } as const;
+
+export const RISK_ENDPOINTS = {
+  overview:        "/risk/overview",
+  list:            "/risk/shipments",
+  assess:          (shipmentId: string) => `/risk/shipments/${shipmentId}/assess`,
+  latest:          (shipmentId: string) => `/risk/shipments/${shipmentId}/latest`,
+  history:         (shipmentId: string) => `/risk/shipments/${shipmentId}/history`,
+} as const;
+
+export const AI_ENDPOINTS = {
+  investigate: (shipmentId: string) => `/ai/shipments/${shipmentId}/investigate`,
+} as const;
+
+export const ROUTE_ENDPOINTS = {
+  optimize:         "/routes/optimize",
+  optimizeShipment: (shipmentId: string) => `/routes/shipments/${shipmentId}/optimized-route`,
+  list:             "/routes",
+  byId:             (id: string) => `/routes/${id}`,
+} as const;

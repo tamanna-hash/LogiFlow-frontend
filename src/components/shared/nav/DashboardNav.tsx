@@ -16,6 +16,8 @@ import {
   ClipboardList,
   MapPin,
   DollarSign,
+  ShieldAlert,
+  Route,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Role } from "@/types";
@@ -140,6 +142,16 @@ const NAV_ITEMS: Record<Role, NavItem[]> = {
       icon: <BarChart3 className="size-4" />,
     },
     {
+      label: "Risk Dashboard",
+      href: "/dashboard/operations/risk",
+      icon: <ShieldAlert className="size-4" />,
+    },
+    {
+      label: "Route Optimizer",
+      href: "/dashboard/operations/route-optimization",
+      icon: <Route className="size-4" />,
+    },
+    {
       label: "Notifications",
       href: "/dashboard/customer/notifications",
       icon: <Bell className="size-4" />,
@@ -185,6 +197,21 @@ const NAV_ITEMS: Record<Role, NavItem[]> = {
       label: "Audit Logs",
       href: "/dashboard/admin/audit-logs",
       icon: <ClipboardList className="size-4" />,
+    },
+    {
+      label: "Risk Dashboard",
+      href: "/dashboard/admin/risk",
+      icon: <ShieldAlert className="size-4" />,
+    },
+    {
+      label: "Route Optimizer",
+      href: "/dashboard/admin/route-optimization",
+      icon: <Route className="size-4" />,
+    },
+    {
+      label: "Route Network",
+      href: "/dashboard/admin/routes",
+      icon: <MapPin className="size-4" />,
     },
     {
       label: "Zones",

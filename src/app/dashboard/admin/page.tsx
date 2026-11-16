@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import {
   Users, Package, Warehouse, CreditCard, TrendingUp, CheckCircle,
-  Clock, BarChart3, ArrowRight, Activity, Hand,
+  Clock, BarChart3, ArrowRight, Activity, Hand, ShieldAlert,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -129,7 +129,8 @@ export default function AdminOverviewPage() {
                 { label: "Manage Hubs",      desc: "Hub configuration",               icon: <Warehouse className="size-4" />, href: "/dashboard/admin/hubs",        bg: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
                 { label: "Payments",         desc: "Transaction monitoring",          icon: <CreditCard className="size-4" />,href: "/dashboard/admin/payments",    bg: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
                 { label: "Pricing Rules",    desc: "Configure delivery pricing",      icon: <TrendingUp className="size-4" />,href: "/dashboard/admin/pricing",     bg: "bg-pink-500/10 text-pink-600 dark:text-pink-400" },
-                { label: "Audit Logs",       desc: "System audit history",            icon: <BarChart3 className="size-4" />, href: "/dashboard/admin/audit-logs",  bg: "bg-slate-500/10 text-slate-600 dark:text-slate-400" },
+                { label: "Audit Logs",       desc: "System audit history",            icon: <BarChart3 className="size-4" />,    href: "/dashboard/admin/audit-logs",   bg: "bg-slate-500/10 text-slate-600 dark:text-slate-400" },
+                { label: "Risk Dashboard",   desc: "Shipment risk monitoring",         icon: <ShieldAlert className="size-4" />, href: "/dashboard/admin/risk",          bg: "bg-red-500/10 text-red-600 dark:text-red-400" },
               ].map((a) => (
                 <Link key={a.href} href={a.href} className="flex items-center gap-3 rounded-lg border p-3 hover:bg-accent transition-colors">
                   <div className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${a.bg}`}>{a.icon}</div>
